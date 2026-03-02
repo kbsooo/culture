@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBar from '../components/NavBar.astro';
+import moviesRaw from '../../../data/movies.json';
+import booksRaw from '../../../data/books.json';
+
+interface Row {
+  type: 'movie' | 'book';
+  title: string;
+  subtitle: string | null;
+  rating: number;
+  review: string | null;
+  date: string | null;
+  duration: string | null;
+}
+
+const rows: Row[] = [
+  ...moviesRaw.map(m => ({
+    type: 'movie' as const,
+    title:    m.title_ko || m.user_title,
+    subtitle: (m.title_original && m.title_original !== m.title_ko) ? m.title_original : null,
+    rating:   m.rating,
+    review:   m.review || null,
+    date:     m.watched_date || null,
+    duration: m.runtime ? `${m.runtime}분` : null,
+  })),
+  ...booksRaw.map(b => ({
+    type: 'book' as const,
+    title:    b.user_title || b.title_normalized,
+    subtitle: (b.authors ?? []).join(', ') || null,
+    rating:   b.rating,
+    review:   b.review || null,
+    date:     b.finish_date || null,
+    duration: b.reading_days ? `${b.reading_days}일` : null,
+  })),
+];
+
+// Sort: dated first (desc), then undated alphabetically
+rows.sort((a, b) => {
+  if (!a.date && !b.date) return a.title.localeCompare(b.title);
+  if (!a.date) return 1;
+  if (!b.date) return -1;
+  return b.date.localeCompare(a.date);
+});
+
+function fmtDate(d: string | null) {
+  if (!d) return null;
+  return new Date(d + 'T12:00:00').toLocaleDateString('ko-KR', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+  });
+}
+---
+
+<BaseLayout title="기록">
+  <NavBar slot="nav" />
+
+  <!-- Header -->
+  <div class="mb-10 flex items-end justify-between gap-6 flex-wrap">
+    <div>
+      <p class="label mb-3">전체 목록</p>
+      <h1 class="text-4xl font-bold tracking-tight" style="color: var(--text-1)">기록</h1>
+      <p class="text-sm font-mono mt-2" style="color: var(--text-2)">
+        {rows.length}개 · 영화 {moviesRaw.length} · 책 {booksRaw.length}
+      </p>
+    </div>
+
+    <!-- Type filter -->
+    <div class="flex gap-1.5" id="type-filter">
+      {(['all', 'movie', 'book'] as const).map(t => (
+        <button class="type-btn" data-type={t}
+          style={`font-size:0.7rem; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.75rem; border-radius:4px; cursor:pointer; transition:all .15s; border:1px solid ${t === 'all' ? 'var(--accent)' : 'var(--border)'}; color:${t === 'all' ? 'var(--accent)' : 'var(--text-2)'}; background:transparent;`}>
+          {t === 'all' ? '전체' : t === 'movie' ? '영화' : '책'}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {rows.length === 0 ? (
+    <div class="py-24 text-center">
+      <p class="label">아직 기록이 없어요</p>
+    </div>
+  ) : (
+    <div>
+      <!-- Table header -->
+      <div class="hidden sm:grid gap-4 pb-3 mb-1"
+           style="grid-template-columns: 1.4rem 1fr 3.5rem 6rem 3.5rem; border-bottom: 1px solid var(--border);">
+        <div></div>
+        <p class="label">제목</p>
+        <p class="label text-right">별점</p>
+        <p class="label text-right">날짜</p>
+        <p class="label text-right">기간</p>
+      </div>
+
+      <!-- Rows -->
+      <div id="records-list">
+        {rows.map(row => (
+          <div class="record-row py-4" data-type={row.type}
+               style="border-bottom: 1px solid var(--border);">
+
+            <!-- Desktop layout -->
+            <div class="hidden sm:grid gap-4 items-start"
+                 style="grid-template-columns: 1.4rem 1fr 3.5rem 6rem 3.5rem;">
+
+              <!-- Type indicator: thin vertical bar -->
+              <div class="mt-0.5 flex justify-center">
+                <div class="w-[2px] h-4 rounded-full"
+                     style={`background: ${row.type === 'movie' ? 'var(--accent)' : 'var(--text-3)'}`} />
+              </div>
+
+              <!-- Title + subtitle + review -->
+              <div class="min-w-0">
+                <p class="text-sm font-medium leading-snug" style="color: var(--text-1)">{row.title}</p>
+                {row.subtitle && (
+                  <p class="text-[11px] font-mono mt-0.5 truncate" style="color: var(--text-3)">{row.subtitle}</p>
+                )}
+                {row.review && (
+                  <p class="text-[11px] mt-1.5 line-clamp-2 leading-relaxed" style="color: var(--text-2)">{row.review}</p>
+                )}
+              </div>
+
+              <!-- Rating -->
+              <p class="text-sm font-mono text-right" style="color: var(--accent)">★ {row.rating}</p>
+
+              <!-- Date -->
+              <p class="text-[11px] font-mono text-right" style="color: var(--text-3)">
+                {fmtDate(row.date) ?? '—'}
+              </p>
+
+              <!-- Duration -->
+              <p class="text-[11px] font-mono text-right" style="color: var(--text-3)">
+                {row.duration ?? '—'}
+              </p>
+            </div>
+
+            <!-- Mobile layout -->
+            <div class="sm:hidden flex gap-3 items-start">
+              <div class="mt-1.5 shrink-0">
+                <div class="w-[2px] h-3 rounded-full"
+                     style={`background: ${row.type === 'movie' ? 'var(--accent)' : 'var(--text-3)'}`} />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-baseline justify-between gap-2">
+                  <p class="text-sm font-medium truncate" style="color: var(--text-1)">{row.title}</p>
+                  <span class="text-xs font-mono shrink-0" style="color: var(--accent)">★ {row.rating}</span>
+                </div>
+                {row.subtitle && (
+                  <p class="text-[11px] font-mono mt-0.5 truncate" style="color: var(--text-3)">{row.subtitle}</p>
+                )}
+                <div class="flex items-center gap-3 mt-1">
+                  <span class="text-[11px] font-mono" style="color: var(--text-3)">
+                    {fmtDate(row.date) ?? '날짜 미상'}
+                  </span>
+                  {row.duration && (
+                    <span class="text-[11px] font-mono" style="color: var(--text-3)">{row.duration}</span>
+                  )}
+                </div>
+                {row.review && (
+                  <p class="text-[11px] mt-1 line-clamp-1 leading-relaxed" style="color: var(--text-2)">{row.review}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</BaseLayout>
+
+<script is:inline>
+  (function() {
+    var buttons = document.querySelectorAll('.type-btn');
+    var rows    = document.querySelectorAll('.record-row');
+
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var type = btn.getAttribute('data-type');
+
+        buttons.forEach(function(b) {
+          var isThis = b === btn;
+          b.style.borderColor = isThis ? 'var(--accent)' : 'var(--border)';
+          b.style.color       = isThis ? 'var(--accent)' : 'var(--text-2)';
+        });
+
+        rows.forEach(function(row) {
+          row.style.display = (type === 'all' || row.getAttribute('data-type') === type) ? '' : 'none';
+        });
+      });
+    });
+  })();
+</script>

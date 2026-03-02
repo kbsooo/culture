@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design tokens ─── */
+:root {
+  --accent: #b8842a;        /* warm gold, light mode */
+  --accent-muted: #d4a85350;
+
+  --bg: #f4f3ef;            /* warm paper off-white */
+  --surface: #ffffff;
+  --border: #e2dfd8;
+  --border-strong: #c9c5bc;
+
+  --text-1: #191817;
+  --text-2: #6b6560;
+  --text-3: #b0aba3;
+}
+
+.dark {
+  --accent: #d4a853;        /* gold brightens in dark */
+  --accent-muted: #d4a85325;
+
+  --bg: #0e0e0e;
+  --surface: #171717;
+  --border: #262626;
+  --border-strong: #363636;
+
+  --text-1: #eeece8;
+  --text-2: #7a7672;
+  --text-3: #3f3d3a;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    background-color: var(--bg);
+    color: var(--text-1);
+  }
+
+  body {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg);
+    color: var(--text-1);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  /* Refined scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+}
+
+@layer components {
+  /* Upper-case micro-label — the editorial building block */
+  .label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  /* Big display number */
+  .display-num {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--text-1);
+  }
+
+  /* Thin divider */
+  .divider {
+    border-color: var(--border);
+  }
+
+  /* Table row */
+  .trow {
+    border-bottom: 1px solid var(--border);
+  }
+  .trow:hover {
+    background-color: var(--surface);
+  }
+}
+
+/* ─── cal-heatmap ─── */
+.ch-container { overflow-x: auto; }
+
+rect.ch-subdomain-bg {
+  fill: var(--border);
+  rx: 2; ry: 2;
+}
+
+.ch-domain-text {
+  fill: var(--text-3);
+  font-size: 10px;
+  font-family: "JetBrains Mono", monospace;
+}

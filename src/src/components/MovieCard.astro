@@ -1,0 +1,76 @@
+---
+interface Props {
+  movie: {
+    id: number;
+    title_ko: string;
+    user_title?: string;
+    title_original?: string | null;
+    poster_path?: string | null;
+    rating: number;
+    review?: string;
+    watched_date?: string | null;
+    genres?: string[];
+    runtime?: number | null;
+    tmdb_rating?: number | null;
+  };
+}
+
+const { movie } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+
+const posterUrl = movie.poster_path
+  ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
+  : `${base}/placeholder-movie.svg`;
+
+const displayTitle = movie.title_ko || movie.user_title || '';
+
+const dateStr = movie.watched_date
+  ? new Date(movie.watched_date + 'T12:00:00').toLocaleDateString('ko-KR', {
+      year: 'numeric', month: 'numeric', day: 'numeric',
+    })
+  : null;
+---
+
+<!--
+  Poster-dominant card: image fills 100%, info is minimal below.
+  No overlays, no chips, no badges stacked on each other.
+  Hover reveals a very subtle lift — not a glow party.
+-->
+<article class="group cursor-default" style="color: var(--text-1)">
+  <!-- Poster -->
+  <div class="aspect-[2/3] overflow-hidden rounded-sm mb-3"
+       style="background: var(--border);">
+    <img
+      src={posterUrl}
+      alt={`${displayTitle} 포스터`}
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+      onerror={`this.src='${base}/placeholder-movie.svg'`}
+    />
+  </div>
+
+  <!-- Info: absolutely minimal -->
+  <div class="space-y-0.5 px-0.5">
+    <h3 class="text-sm font-medium leading-snug line-clamp-2" style="color: var(--text-1)">
+      {displayTitle}
+    </h3>
+
+    <div class="flex items-center justify-between gap-2">
+      {dateStr
+        ? <span class="text-[11px] font-mono" style="color: var(--text-3)">{dateStr}</span>
+        : <span class="text-[11px] font-mono" style="color: var(--text-3)">날짜 미상</span>
+      }
+      <span class="text-[11px] font-mono shrink-0" style="color: var(--accent)">
+        ★ {movie.rating}
+      </span>
+    </div>
+
+    {movie.review && (
+      <p class="text-[11px] leading-relaxed line-clamp-2 pt-0.5" style="color: var(--text-2)">
+        {movie.review}
+      </p>
+    )}
+  </div>
+</article>

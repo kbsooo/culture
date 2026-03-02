@@ -1,0 +1,70 @@
+---
+interface Movie {
+  rating: number;
+  watched_date?: string | null;
+  runtime?: number | null;
+}
+interface Book {
+  rating: number;
+  finish_date?: string | null;
+  reading_days?: number | null;
+  pages?: number | null;
+}
+interface Props {
+  movies: Movie[];
+  books: Book[];
+}
+
+const { movies, books } = Astro.props;
+
+const now = new Date();
+const thisYear  = now.getFullYear().toString();          // "2025"
+const thisMonth = `${thisYear}-${String(now.getMonth() + 1).padStart(2, '0')}`; // "2025-03"
+
+const moviesThisMonth = movies.filter(m => m.watched_date?.startsWith(thisMonth)).length;
+const booksThisMonth  = books.filter(b => b.finish_date?.startsWith(thisMonth)).length;
+
+const moviesThisYear  = movies.filter(m => m.watched_date?.startsWith(thisYear)).length;
+const booksThisYear   = books.filter(b => b.finish_date?.startsWith(thisYear)).length;
+
+const totalMovies = movies.length;
+const totalBooks  = books.length;
+---
+
+<!--
+  Stats strip: two time windows (이번 달 / 올해) + lifetime totals.
+  No boxes, no cards — just numbers with thin dividers.
+-->
+<div class="flex flex-wrap gap-x-8 gap-y-6 mb-14 pb-10"
+     style="border-bottom: 1px solid var(--border)">
+
+  <!-- This month -->
+  <div>
+    <p class="label mb-2">이번 달</p>
+    <p class="display-num" style="color: var(--accent)">
+      {moviesThisMonth + booksThisMonth}
+    </p>
+    <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+      영화 {moviesThisMonth} · 책 {booksThisMonth}
+    </p>
+  </div>
+
+  <!-- This year -->
+  <div style="border-left: 1px solid var(--border); padding-left: 2rem;">
+    <p class="label mb-2">올해</p>
+    <p class="display-num">{moviesThisYear + booksThisYear}</p>
+    <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+      영화 {moviesThisYear} · 책 {booksThisYear}
+    </p>
+  </div>
+
+  <!-- Lifetime totals -->
+  <div style="border-left: 1px solid var(--border); padding-left: 2rem;">
+    <p class="label mb-2">전체</p>
+    <p class="display-num">{totalMovies + totalBooks}</p>
+    <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+      영화 {totalMovies} · 책 {totalBooks}
+    </p>
+  </div>
+
+</div>

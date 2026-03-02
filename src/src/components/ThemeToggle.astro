@@ -1,0 +1,29 @@
+---
+---
+
+<button
+  id="theme-toggle"
+  aria-label="테마 전환"
+  class="w-8 h-8 flex items-center justify-center rounded-md transition-colors"
+  style="color: var(--text-2);"
+>
+  <!-- Sun: show in dark mode -->
+  <svg id="icon-sun" class="hidden dark:block w-[18px] h-[18px]" fill="none" stroke="currentColor"
+       stroke-width="1.75" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="5"/>
+    <path stroke-linecap="round"
+      d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"/>
+  </svg>
+  <!-- Moon: show in light mode -->
+  <svg id="icon-moon" class="block dark:hidden w-[18px] h-[18px]" fill="none" stroke="currentColor"
+       stroke-width="1.75" viewBox="0 0 24 24">
+    <path stroke-linecap="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+  </svg>
+</button>
+
+<script>
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+</script>

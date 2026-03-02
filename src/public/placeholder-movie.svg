@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" fill="none">
+  <rect width="200" height="300" fill="#1f2937"/>
+  <text x="100" y="145" text-anchor="middle" font-size="60" fill="#374151">🎬</text>
+  <text x="100" y="185" text-anchor="middle" font-size="14" fill="#6b7280" font-family="sans-serif">포스터 없음</text>
+</svg>
