@@ -21,6 +21,28 @@
     "tmdb_rating": 7.2
   },
   {
+    "id": 73,
+    "user_title": "아바타: 불과 재",
+    "rating": 6,
+    "review": "호주 멜번 아이맥스에서 봄.\n솔직히 아바타 왜보는지 모르겠음.",
+    "watched_date": "2026-01-01",
+    "added_at": "2026-03-02T06:45:05.461Z",
+    "tmdb_id": 83533,
+    "title_ko": "아바타: 불과 재",
+    "title_original": "Avatar: Fire and Ash",
+    "poster_path": "/l18o0AK18KS118tWeROOKYkF0ng.jpg",
+    "backdrop_path": "/sdZSjtGUTSN8B3al5o0f2WoQfQQ.jpg",
+    "release_date": "2025-12-17",
+    "genres": [
+      "SF",
+      "모험",
+      "판타지"
+    ],
+    "runtime": 195,
+    "overview": "인간들과의 전쟁으로 첫째 아들 ‘네테이얌’을 잃은 후, ‘제이크’와 ‘네이티리’는 깊은 슬픔에 빠진다. 상실에 빠진 이들 앞에 '바랑'이 이끄는 재의 부족이 등장하면서, 판도라는 더욱 큰 위험에 빠지게 되고, ‘설리’ 가족은 선택의 기로에 서게 되는데…",
+    "tmdb_rating": 7.277
+  },
+  {
     "id": 46,
     "user_title": "보스",
     "rating": 8,
