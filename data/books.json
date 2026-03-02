@@ -109,5 +109,33 @@
     ],
     "pages": null,
     "isbn": "9791140700288"
+  },
+  {
+    "id": 8,
+    "user_title": "참을 수 없는 존재의 가벼움",
+    "rating": 7,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T05:44:51.521Z",
+    "aladin_item_id": 347978053,
+    "title_normalized": "참을 수 없는 존재의 가벼움 (리커버) - 국내 출간 30주년 기념 특별판",
+    "authors": [
+      "밀란 쿤데라",
+      "이재룡"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/34797/80/cover200/8937437562_1.jpg",
+    "cover_id": null,
+    "publisher": "민음사",
+    "first_publish_year": 2018,
+    "subjects": [
+      "국내도서",
+      "소설/시/희곡",
+      "세계의 소설",
+      "동유럽소설"
+    ],
+    "pages": null,
+    "isbn": "9788937437564"
   }
 ]
