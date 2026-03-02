@@ -248,5 +248,32 @@
     ],
     "pages": null,
     "isbn": "9791140706327"
+  },
+  {
+    "id": 36,
+    "user_title": "모든 것은 예측 가능하다",
+    "rating": 7,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T06:00:28.642Z",
+    "aladin_item_id": 354932983,
+    "title_normalized": "모든 것은 예측 가능하다 - 진단검사에서 뇌의 작동 원리까지, 세상을 설명하는 베이즈 정리의 놀라운 힘",
+    "authors": [
+      "톰 치버스",
+      "홍한결"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/35493/29/cover200/k012035556_1.jpg",
+    "cover_id": null,
+    "publisher": "김영사",
+    "first_publish_year": 2025,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "기초과학/교양과학"
+    ],
+    "pages": null,
+    "isbn": "9791173320149"
   }
 ]
