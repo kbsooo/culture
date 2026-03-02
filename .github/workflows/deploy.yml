@@ -8,7 +8,7 @@ on:
       - 'data/**'
       - 'public/**'
   workflow_run:
-    workflows: ["Process Issue"]
+    workflows: ["Process Issue", "Backfill Issues"]
     types: [completed]
   workflow_dispatch:
 

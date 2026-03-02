@@ -54,10 +54,25 @@ function normalizeUserDate(raw) {
 }
 
 async function fetchTMDBData(title, apiKey) {
+  if (!apiKey) {
+    console.warn('[TMDB] TMDB_API_KEY is not set. Continue without metadata.');
+    return null;
+  }
+
   // Search with Korean locale first for Korean titles
   const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}&language=ko-KR`;
-  const searchRes = await fetch(searchUrl);
-  const searchData = await searchRes.json();
+  let searchData;
+  try {
+    const searchRes = await fetch(searchUrl);
+    if (!searchRes.ok) {
+      console.warn(`[TMDB] Search API error: ${searchRes.status} ${searchRes.statusText}`);
+      return null;
+    }
+    searchData = await searchRes.json();
+  } catch (error) {
+    console.warn(`[TMDB] Search request failed: ${error?.message ?? error}`);
+    return null;
+  }
 
   if (!searchData.results || searchData.results.length === 0) {
     console.warn(`[TMDB] No results found for: "${title}"`);
@@ -68,8 +83,18 @@ async function fetchTMDBData(title, apiKey) {
 
   // Fetch full details to get runtime, genres, etc.
   const detailUrl = `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${apiKey}&language=ko-KR`;
-  const detailRes = await fetch(detailUrl);
-  const detail = await detailRes.json();
+  let detail;
+  try {
+    const detailRes = await fetch(detailUrl);
+    if (!detailRes.ok) {
+      console.warn(`[TMDB] Detail API error: ${detailRes.status} ${detailRes.statusText}`);
+      return null;
+    }
+    detail = await detailRes.json();
+  } catch (error) {
+    console.warn(`[TMDB] Detail request failed: ${error?.message ?? error}`);
+    return null;
+  }
 
   return {
     tmdb_id: detail.id,
@@ -89,10 +114,6 @@ async function main() {
   const body = process.env.ISSUE_BODY ?? '';
   const issueNumber = parseInt(process.env.ISSUE_NUMBER ?? '0', 10);
   const apiKey = process.env.TMDB_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('TMDB_API_KEY secret is not set');
-  }
 
   const parsed = parseIssueForm(body);
   console.log('[parse] Parsed sections:', JSON.stringify(parsed, null, 2));

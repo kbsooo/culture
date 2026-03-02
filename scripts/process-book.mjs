@@ -64,28 +64,32 @@ async function fetchAladinBookData(title, ttbKey) {
 
   for (const query of queryCandidates) {
     for (const queryType of queryTypes) {
-      const url = new URL('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx');
-      url.searchParams.set('ttbkey', ttbKey);
-      url.searchParams.set('Query', query);
-      url.searchParams.set('QueryType', queryType);
-      url.searchParams.set('SearchTarget', 'Book');
-      url.searchParams.set('MaxResults', '10');
-      url.searchParams.set('start', '1');
-      url.searchParams.set('Cover', 'Big');
-      url.searchParams.set('output', 'js');
-      url.searchParams.set('Version', '20131101');
+      try {
+        const url = new URL('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx');
+        url.searchParams.set('ttbkey', ttbKey);
+        url.searchParams.set('Query', query);
+        url.searchParams.set('QueryType', queryType);
+        url.searchParams.set('SearchTarget', 'Book');
+        url.searchParams.set('MaxResults', '10');
+        url.searchParams.set('start', '1');
+        url.searchParams.set('Cover', 'Big');
+        url.searchParams.set('output', 'js');
+        url.searchParams.set('Version', '20131101');
 
-      const res = await fetch(url);
-      if (!res.ok) {
-        console.warn(`[Aladin] API error (${queryType}): ${res.status} ${res.statusText}`);
-        continue;
+        const res = await fetch(url);
+        if (!res.ok) {
+          console.warn(`[Aladin] API error (${queryType}): ${res.status} ${res.statusText}`);
+          continue;
+        }
+
+        const data = await res.json();
+        if (!Array.isArray(data.item) || data.item.length === 0) continue;
+
+        selectedBook = data.item.find(item => normalizeCoverUrl(item.cover)) ?? data.item[0];
+        if (selectedBook) break;
+      } catch (error) {
+        console.warn(`[Aladin] Request failed (${queryType}) for "${query}": ${error?.message ?? error}`);
       }
-
-      const data = await res.json();
-      if (!Array.isArray(data.item) || data.item.length === 0) continue;
-
-      selectedBook = data.item.find(item => normalizeCoverUrl(item.cover)) ?? data.item[0];
-      if (selectedBook) break;
     }
     if (selectedBook) break;
   }
