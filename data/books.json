@@ -1,5 +1,25 @@
 [
   {
+    "id": 38,
+    "user_title": "The Technological Republic",
+    "rating": 7,
+    "review": "팔란티어 알렉스 카프가 쓴 책\n영어라 어려움",
+    "start_date": "2025-03-10",
+    "finish_date": "2025-06-30",
+    "reading_days": 112,
+    "added_at": "2026-03-02T06:04:31.373Z",
+    "aladin_item_id": null,
+    "title_normalized": "The Technological Republic",
+    "authors": [],
+    "cover_url": null,
+    "cover_id": null,
+    "publisher": null,
+    "first_publish_year": null,
+    "subjects": [],
+    "pages": null,
+    "isbn": null
+  },
+  {
     "id": 37,
     "user_title": "기계는 왜 학습하는가",
     "rating": 10,
