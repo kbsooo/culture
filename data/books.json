@@ -137,5 +137,33 @@
     ],
     "pages": null,
     "isbn": "9788937437564"
+  },
+  {
+    "id": 9,
+    "user_title": "걷기의 세계",
+    "rating": 5,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T05:46:40.017Z",
+    "aladin_item_id": 295622376,
+    "title_normalized": "걷기의 세계 - 뇌과학자가 전하는 가장 단순한 운동의 경이로움",
+    "authors": [
+      "셰인 오마라",
+      "구희성"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/29562/23/cover200/k462837253_1.jpg",
+    "cover_id": null,
+    "publisher": "미래의창",
+    "first_publish_year": 2022,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "뇌과학",
+      "뇌과학 일반"
+    ],
+    "pages": null,
+    "isbn": "9791191464719"
   }
 ]
