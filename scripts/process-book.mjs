@@ -37,6 +37,46 @@ function normalizeCoverUrl(raw) {
   return trimmed.replace(/^http:\/\//i, 'https://');
 }
 
+function parsePositiveInt(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  return Math.round(n);
+}
+
+function pickPageCount(book) {
+  return (
+    parsePositiveInt(book?.subInfo?.itemPage) ??
+    parsePositiveInt(book?.itemPage) ??
+    null
+  );
+}
+
+async function fetchAladinItemDetail(itemId, ttbKey) {
+  if (!itemId || !ttbKey) return null;
+  try {
+    const url = new URL('https://www.aladin.co.kr/ttb/api/ItemLookUp.aspx');
+    url.searchParams.set('ttbkey', ttbKey);
+    url.searchParams.set('itemIdType', 'ItemId');
+    url.searchParams.set('ItemId', String(itemId));
+    url.searchParams.set('Cover', 'Big');
+    url.searchParams.set('output', 'js');
+    url.searchParams.set('Version', '20131101');
+
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.warn(`[Aladin] ItemLookUp error: ${res.status} ${res.statusText}`);
+      return null;
+    }
+
+    const data = await res.json();
+    const detail = Array.isArray(data.item) ? data.item[0] : null;
+    return detail ?? null;
+  } catch (error) {
+    console.warn(`[Aladin] ItemLookUp request failed: ${error?.message ?? error}`);
+    return null;
+  }
+}
+
 function buildQueryCandidates(title) {
   const base = (title ?? '').trim();
   if (!base) return [];
@@ -100,22 +140,24 @@ async function fetchAladinBookData(title, ttbKey) {
   }
 
   const book = selectedBook;
-  const year = parseInt((book.pubDate ?? '').slice(0, 4), 10);
+  const detail = await fetchAladinItemDetail(book.itemId, ttbKey);
+  const source = detail ?? book;
+  const year = parseInt((source.pubDate ?? '').slice(0, 4), 10);
   const categories = (book.categoryName ?? '')
     .split('>')
     .map(s => s.trim())
     .filter(Boolean);
 
   return {
-    aladin_item_id: book.itemId ?? null,
-    title: book.title ?? null,
-    authors: parseAuthors(book.author),
-    cover_url: normalizeCoverUrl(book.cover),
-    publisher: book.publisher ?? null,
+    aladin_item_id: source.itemId ?? book.itemId ?? null,
+    title: source.title ?? book.title ?? null,
+    authors: parseAuthors(source.author ?? book.author),
+    cover_url: normalizeCoverUrl(source.cover ?? book.cover),
+    publisher: source.publisher ?? book.publisher ?? null,
     first_publish_year: Number.isFinite(year) ? year : null,
     subjects: categories.slice(0, 5),
-    pages: book.subInfo?.itemPage ?? null,
-    isbn: book.isbn13 ?? book.isbn ?? null,
+    pages: pickPageCount(source),
+    isbn: source.isbn13 ?? source.isbn ?? book.isbn13 ?? book.isbn ?? null,
   };
 }
 

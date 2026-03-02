@@ -29,6 +29,7 @@ const totalPages = pageKnownBooks.reduce((sum, b) => sum + (b.pages ?? 0), 0);
 const avgPages = pageKnownBooks.length > 0
   ? Math.round(totalPages / pageKnownBooks.length)
   : null;
+const pageUnknownBooks = totalBooks - pageKnownBooks.length;
 const readingDaysKnownBooks = books.filter(b => Number.isFinite(b.reading_days) && (b.reading_days ?? 0) >= 0);
 const totalReadingDays = readingDaysKnownBooks.reduce((sum, b) => sum + (b.reading_days ?? 0), 0);
 
@@ -105,10 +106,15 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 
     <div class="stat-box">
       <p class="label mb-2">읽은 페이지</p>
-      <p class="display-num">{totalPages.toLocaleString('ko-KR')}p</p>
+      <p class="display-num">{pageKnownBooks.length > 0 ? `${totalPages.toLocaleString('ko-KR')}p` : '—'}</p>
       <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
-        평균 {avgPages ?? '—'}p · 완독 {totalBooks}권
+        평균 {avgPages ?? '—'}p · 페이지 확인 {pageKnownBooks.length}권
       </p>
+      {pageUnknownBooks > 0 && (
+        <p class="text-[11px] mt-1" style="color: var(--text-3)">
+          페이지 미확인 {pageUnknownBooks}권
+        </p>
+      )}
     </div>
 
     <div class="stat-box">

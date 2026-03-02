@@ -61,7 +61,7 @@ const years = Object.entries(byYear).sort((a, b) => {
   </div>
 
   {books.length > 0 ? (
-    <div class="grid grid-cols-cards gap-5" id="books-grid">
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-cards sm:gap-5" id="books-grid">
       {books.map(book => (
         <div data-year={book.finish_date?.slice(0, 4) ?? '날짜 미상'}>
           <BookCard book={book} />

@@ -60,7 +60,7 @@ const years = Object.entries(byYear).sort((a, b) => {
   </div>
 
   {movies.length > 0 ? (
-    <div class="grid grid-cols-cards gap-5" id="movies-grid">
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-cards sm:gap-5" id="movies-grid">
       {movies.map(movie => (
         <div data-year={movie.watched_date?.slice(0, 4) ?? '날짜 미상'}>
           <MovieCard movie={movie} />

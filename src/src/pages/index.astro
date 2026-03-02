@@ -80,7 +80,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
               >전체 보기 →</a>
             )}
           </div>
-          <div class="grid grid-cols-cards gap-5">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-cards sm:gap-5">
             {recentMovies.map(movie => <MovieCard movie={movie} />)}
           </div>
         </section>
@@ -100,7 +100,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
               >전체 보기 →</a>
             )}
           </div>
-          <div class="grid grid-cols-cards gap-5">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-cards sm:gap-5">
             {recentBooks.map(book => <BookCard book={book} />)}
           </div>
         </section>
