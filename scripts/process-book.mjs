@@ -71,6 +71,7 @@ async function fetchAladinBookData(title, ttbKey) {
       url.searchParams.set('SearchTarget', 'Book');
       url.searchParams.set('MaxResults', '10');
       url.searchParams.set('start', '1');
+      url.searchParams.set('Cover', 'Big');
       url.searchParams.set('output', 'js');
       url.searchParams.set('Version', '20131101');
 
