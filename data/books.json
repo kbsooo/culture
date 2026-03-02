@@ -1,5 +1,33 @@
 [
   {
+    "id": 44,
+    "user_title": "시대예보: 경량문명의 탄생",
+    "rating": 7,
+    "review": "시대 흐름 브리핑 하는 책.\n근데 내가 아니라 못따라가는 사람이 읽어야 하지 않나?",
+    "start_date": "2026-01-18",
+    "finish_date": "2026-01-30",
+    "reading_days": 12,
+    "added_at": "2026-03-02T06:10:48.284Z",
+    "aladin_item_id": 385068538,
+    "title_normalized": "시대예보: 경량문명의 탄생 (시리즈 30만부 기념 리커버 한정판)",
+    "authors": [
+      "송길영"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/38506/85/cover200/k692135931_1.jpg",
+    "cover_id": null,
+    "publisher": "교보문고(단행본)",
+    "first_publish_year": 2025,
+    "subjects": [
+      "국내도서",
+      "경제경영",
+      "경제학/경제일반",
+      "경제사/경제전망",
+      "한국 경제사/경제전망"
+    ],
+    "pages": null,
+    "isbn": "9791170613114"
+  },
+  {
     "id": 42,
     "user_title": "기억의 미래",
     "rating": 8,
