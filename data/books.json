@@ -252,12 +252,12 @@
   {
     "id": 36,
     "user_title": "모든 것은 예측 가능하다",
-    "rating": 7,
+    "rating": 9,
     "review": "",
     "start_date": null,
     "finish_date": null,
     "reading_days": null,
-    "added_at": "2026-03-02T06:00:28.642Z",
+    "added_at": "2026-03-02T06:02:08.963Z",
     "aladin_item_id": 354932983,
     "title_normalized": "모든 것은 예측 가능하다 - 진단검사에서 뇌의 작동 원리까지, 세상을 설명하는 베이즈 정리의 놀라운 힘",
     "authors": [
@@ -274,6 +274,7 @@
       "기초과학/교양과학"
     ],
     "pages": null,
-    "isbn": "9791173320149"
+    "isbn": "9791173320149",
+    "ol_key": null
   }
 ]
