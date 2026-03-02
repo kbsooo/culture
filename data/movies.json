@@ -87,6 +87,24 @@
     "tmdb_rating": 6.307
   },
   {
+    "id": 72,
+    "user_title": "F1 The Moive",
+    "rating": 10,
+    "review": "강병수 선정 2025 올해의 영화. 대명작",
+    "watched_date": "2025-06-28",
+    "added_at": "2026-03-02T06:28:28.613Z",
+    "tmdb_id": null,
+    "title_ko": "F1 The Moive",
+    "title_original": null,
+    "poster_path": null,
+    "backdrop_path": null,
+    "release_date": null,
+    "genres": [],
+    "runtime": null,
+    "overview": null,
+    "tmdb_rating": null
+  },
+  {
     "id": 48,
     "user_title": "A MINECRAFT MOVIE",
     "rating": 6,
