@@ -47,8 +47,26 @@ function pickPageCount(book) {
   return (
     parsePositiveInt(book?.subInfo?.itemPage) ??
     parsePositiveInt(book?.itemPage) ??
+    parsePositiveInt(book?.pageCount) ??
     null
   );
+}
+
+function normalizeYear(value) {
+  const year = parseInt(String(value ?? '').slice(0, 4), 10);
+  return Number.isFinite(year) ? year : null;
+}
+
+function pickGoogleIsbn(identifiers) {
+  if (!Array.isArray(identifiers)) return null;
+  const isbn13 = identifiers.find(id => id?.type === 'ISBN_13')?.identifier;
+  if (isbn13) return isbn13;
+  return identifiers.find(id => id?.type === 'ISBN_10')?.identifier ?? null;
+}
+
+function openLibraryCoverFromIsbn(isbn) {
+  if (!isbn) return null;
+  return `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbn)}-M.jpg`;
 }
 
 async function fetchAladinItemDetail(itemId, ttbKey) {
@@ -142,7 +160,7 @@ async function fetchAladinBookData(title, ttbKey) {
   const book = selectedBook;
   const detail = await fetchAladinItemDetail(book.itemId, ttbKey);
   const source = detail ?? book;
-  const year = parseInt((source.pubDate ?? '').slice(0, 4), 10);
+  const year = normalizeYear(source.pubDate);
   const categories = (book.categoryName ?? '')
     .split('>')
     .map(s => s.trim())
@@ -154,11 +172,61 @@ async function fetchAladinBookData(title, ttbKey) {
     authors: parseAuthors(source.author ?? book.author),
     cover_url: normalizeCoverUrl(source.cover ?? book.cover),
     publisher: source.publisher ?? book.publisher ?? null,
-    first_publish_year: Number.isFinite(year) ? year : null,
+    first_publish_year: year,
     subjects: categories.slice(0, 5),
     pages: pickPageCount(source),
     isbn: source.isbn13 ?? source.isbn ?? book.isbn13 ?? book.isbn ?? null,
   };
+}
+
+async function fetchGoogleBooksData(title) {
+  const query = (title ?? '').trim();
+  if (!query) return null;
+
+  const url = new URL('https://www.googleapis.com/books/v1/volumes');
+  url.searchParams.set('q', `intitle:${query}`);
+  url.searchParams.set('maxResults', '10');
+  url.searchParams.set('printType', 'books');
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.warn(`[GoogleBooks] API error: ${res.status} ${res.statusText}`);
+      return null;
+    }
+    const data = await res.json();
+    if (!Array.isArray(data.items) || data.items.length === 0) {
+      console.warn(`[GoogleBooks] No results for: "${title}"`);
+      return null;
+    }
+
+    const picked =
+      data.items.find(item => normalizeCoverUrl(item?.volumeInfo?.imageLinks?.thumbnail)) ??
+      data.items[0];
+
+    const volume = picked?.volumeInfo ?? {};
+    const isbn = pickGoogleIsbn(volume.industryIdentifiers);
+    const googleCover = normalizeCoverUrl(
+      volume.imageLinks?.thumbnail ??
+      volume.imageLinks?.smallThumbnail ??
+      volume.imageLinks?.medium
+    );
+
+    return {
+      google_volume_id: picked?.id ?? null,
+      title: volume.title ?? null,
+      authors: Array.isArray(volume.authors) ? volume.authors : [],
+      cover_url: googleCover ?? openLibraryCoverFromIsbn(isbn),
+      publisher: volume.publisher ?? null,
+      first_publish_year: normalizeYear(volume.publishedDate),
+      subjects: Array.isArray(volume.categories) ? volume.categories.slice(0, 5) : [],
+      pages: pickPageCount(volume),
+      isbn,
+    };
+  } catch (error) {
+    console.warn(`[GoogleBooks] Request failed: ${error?.message ?? error}`);
+    return null;
+  }
 }
 
 async function main() {
@@ -185,6 +253,12 @@ async function main() {
   console.log(`[info] Processing book: "${userTitle}", rating: ${userRating}, finish: ${finishDate}`);
 
   const aladin = await fetchAladinBookData(userTitle, ttbKey);
+  const google = (!aladin || !aladin.cover_url || !aladin.pages)
+    ? await fetchGoogleBooksData(userTitle)
+    : null;
+
+  const authors = (aladin?.authors?.length ? aladin.authors : (google?.authors ?? []));
+  const subjects = (aladin?.subjects?.length ? aladin.subjects : (google?.subjects ?? []));
 
   // Calculate reading duration in days
   let readingDays = null;
@@ -203,16 +277,17 @@ async function main() {
     reading_days: readingDays,
     added_at: new Date().toISOString(),
     aladin_item_id: aladin?.aladin_item_id ?? null,
-    title_normalized: aladin?.title ?? userTitle,
-    authors: aladin?.authors ?? [],
-    cover_url: aladin?.cover_url ?? null,
+    google_volume_id: google?.google_volume_id ?? null,
+    title_normalized: aladin?.title ?? google?.title ?? userTitle,
+    authors,
+    cover_url: aladin?.cover_url ?? google?.cover_url ?? null,
     // Keep for backward compatibility with existing component/data shape.
     cover_id: null,
-    publisher: aladin?.publisher ?? null,
-    first_publish_year: aladin?.first_publish_year ?? null,
-    subjects: aladin?.subjects ?? [],
-    pages: aladin?.pages ?? null,
-    isbn: aladin?.isbn ?? null,
+    publisher: aladin?.publisher ?? google?.publisher ?? null,
+    first_publish_year: aladin?.first_publish_year ?? google?.first_publish_year ?? null,
+    subjects,
+    pages: aladin?.pages ?? google?.pages ?? null,
+    isbn: aladin?.isbn ?? google?.isbn ?? null,
   };
 
   const dataPath = resolve(process.cwd(), 'data', 'books.json');
@@ -234,6 +309,14 @@ async function main() {
       // Keep existing cover if current lookup fails.
       cover_url: record.cover_url ?? existing.cover_url ?? null,
       cover_id: record.cover_id ?? existing.cover_id ?? null,
+      authors: (record.authors && record.authors.length > 0) ? record.authors : (existing.authors ?? []),
+      subjects: (record.subjects && record.subjects.length > 0) ? record.subjects : (existing.subjects ?? []),
+      pages: record.pages ?? existing.pages ?? null,
+      publisher: record.publisher ?? existing.publisher ?? null,
+      first_publish_year: record.first_publish_year ?? existing.first_publish_year ?? null,
+      isbn: record.isbn ?? existing.isbn ?? null,
+      aladin_item_id: record.aladin_item_id ?? existing.aladin_item_id ?? null,
+      google_volume_id: record.google_volume_id ?? existing.google_volume_id ?? null,
     };
     console.log(`[update] Updated existing book entry for issue #${issueNumber}`);
   } else {

@@ -31,15 +31,11 @@ const totalMovies = movies.length;
 const totalBooks  = books.length;
 ---
 
-<!--
-  Stats strip: two time windows (이번 달 / 올해) + lifetime totals.
-  No boxes, no cards — just numbers with thin dividers.
--->
-<div class="flex flex-wrap gap-x-8 gap-y-6 mb-14 pb-10"
+<div class="mb-14 pb-10 grid grid-cols-1 sm:grid-cols-3 gap-4"
      style="border-bottom: 1px solid var(--border)">
 
   <!-- This month -->
-  <div>
+  <div class="stat-cell">
     <p class="label mb-2">이번 달</p>
     <p class="display-num" style="color: var(--accent)">
       {moviesThisMonth + booksThisMonth}
@@ -50,7 +46,7 @@ const totalBooks  = books.length;
   </div>
 
   <!-- This year -->
-  <div style="border-left: 1px solid var(--border); padding-left: 2rem;">
+  <div class="stat-cell sm:border-l sm:pl-8" style="border-color: var(--border);">
     <p class="label mb-2">올해</p>
     <p class="display-num">{moviesThisYear + booksThisYear}</p>
     <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
@@ -59,7 +55,7 @@ const totalBooks  = books.length;
   </div>
 
   <!-- Lifetime totals -->
-  <div style="border-left: 1px solid var(--border); padding-left: 2rem;">
+  <div class="stat-cell sm:border-l sm:pl-8" style="border-color: var(--border);">
     <p class="label mb-2">전체</p>
     <p class="display-num">{totalMovies + totalBooks}</p>
     <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
@@ -68,3 +64,9 @@ const totalBooks  = books.length;
   </div>
 
 </div>
+
+<style>
+  .stat-cell {
+    min-width: 0;
+  }
+</style>
