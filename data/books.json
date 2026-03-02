@@ -81,5 +81,33 @@
     ],
     "pages": null,
     "isbn": "9788966263905"
+  },
+  {
+    "id": 4,
+    "user_title": "이펙티브 엔지니어 - 개발자의 인생을 바꾸는 효율성의 법칙",
+    "rating": 6,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T05:43:17.727Z",
+    "aladin_item_id": 296893356,
+    "title_normalized": "이펙티브 엔지니어 - 개발자의 인생을 바꾸는 효율성의 법칙",
+    "authors": [
+      "에드먼드 라우",
+      "이미령"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/29689/33/cover200/k962838585_1.jpg",
+    "cover_id": null,
+    "publisher": "길벗",
+    "first_publish_year": 2022,
+    "subjects": [
+      "국내도서",
+      "컴퓨터/모바일",
+      "컴퓨터 공학",
+      "소프트웨어 공학"
+    ],
+    "pages": null,
+    "isbn": "9791140700288"
   }
 ]
