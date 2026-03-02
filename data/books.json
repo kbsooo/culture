@@ -7,14 +7,24 @@
     "start_date": null,
     "finish_date": null,
     "reading_days": null,
-    "added_at": "2026-03-02T05:04:00.465Z",
+    "added_at": "2026-03-02T05:21:50.832Z",
     "ol_key": null,
     "title_normalized": "일머리 문해력 - 문해력은 어떻게 당신의 무기가 되는가?",
-    "authors": [],
+    "authors": [
+      "송숙희"
+    ],
     "cover_id": null,
-    "first_publish_year": null,
-    "subjects": [],
+    "first_publish_year": 2023,
+    "subjects": [
+      "국내도서",
+      "자기계발",
+      "성공",
+      "성공학"
+    ],
     "pages": null,
-    "isbn": null
+    "isbn": "9791159098420",
+    "aladin_item_id": 312401370,
+    "cover_url": "https://image.aladin.co.kr/product/31240/13/coversum/k362832061_1.jpg",
+    "publisher": "교보문고(단행본)"
   }
 ]
