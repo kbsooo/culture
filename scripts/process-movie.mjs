@@ -36,6 +36,23 @@ function parseIssueForm(body) {
   return sections;
 }
 
+function normalizeUserDate(raw) {
+  if (!raw || typeof raw !== 'string') return null;
+  const cleaned = raw.trim().replace(/[./]/g, '-').replace(/\s+/g, '');
+  const m = cleaned.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (!m) return null;
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  const d = new Date(year, month - 1, day);
+  if (
+    d.getFullYear() !== year ||
+    d.getMonth() !== month - 1 ||
+    d.getDate() !== day
+  ) return null;
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
 async function fetchTMDBData(title, apiKey) {
   // Search with Korean locale first for Korean titles
   const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}&language=ko-KR`;
@@ -71,7 +88,6 @@ async function fetchTMDBData(title, apiKey) {
 async function main() {
   const body = process.env.ISSUE_BODY ?? '';
   const issueNumber = parseInt(process.env.ISSUE_NUMBER ?? '0', 10);
-  const issueFallbackDate = (process.env.ISSUE_CREATED_AT ?? new Date().toISOString()).slice(0, 10);
   const apiKey = process.env.TMDB_API_KEY;
 
   if (!apiKey) {
@@ -86,7 +102,10 @@ async function main() {
   const userReview  = parsed['한줄 후기']?.trim() ?? '';
   // null when empty — intentional "날짜 미상" support (no fallback to today)
   const rawDate     = parsed['시청 날짜']?.trim();
-  const watchedDate = (rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) ? rawDate : null;
+  const watchedDate = normalizeUserDate(rawDate);
+  if (rawDate && !watchedDate) {
+    console.warn(`[warn] Invalid watched_date format: "${rawDate}"`);
+  }
 
   if (!userTitle) {
     throw new Error('제목(title) field is empty in the issue body');
@@ -123,13 +142,28 @@ async function main() {
     movies = [];
   }
 
-  // Idempotency: skip if already exists
-  if (movies.some(m => m.id === issueNumber)) {
-    console.log(`[skip] Issue #${issueNumber} already exists in movies.json`);
-    process.exit(0);
+  const existingIndex = movies.findIndex(m => m.id === issueNumber);
+  if (existingIndex >= 0) {
+    const existing = movies[existingIndex];
+    movies[existingIndex] = {
+      ...existing,
+      ...record,
+      watched_date: record.watched_date ?? existing.watched_date ?? null,
+      tmdb_id: record.tmdb_id ?? existing.tmdb_id ?? null,
+      title_ko: record.title_ko ?? existing.title_ko ?? userTitle,
+      title_original: record.title_original ?? existing.title_original ?? null,
+      poster_path: record.poster_path ?? existing.poster_path ?? null,
+      backdrop_path: record.backdrop_path ?? existing.backdrop_path ?? null,
+      release_date: record.release_date ?? existing.release_date ?? null,
+      genres: (record.genres && record.genres.length > 0) ? record.genres : (existing.genres ?? []),
+      runtime: record.runtime ?? existing.runtime ?? null,
+      overview: record.overview ?? existing.overview ?? null,
+      tmdb_rating: record.tmdb_rating ?? existing.tmdb_rating ?? null,
+    };
+    console.log(`[update] Updated existing movie entry for issue #${issueNumber}`);
+  } else {
+    movies.push(record);
   }
-
-  movies.push(record);
   // Dated entries first (desc), undated at end
   movies.sort((a, b) => {
     if (!a.watched_date && !b.watched_date) return 0;

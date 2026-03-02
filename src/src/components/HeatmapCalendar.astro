@@ -1,4 +1,6 @@
 ---
+import { formatYyyyMmDd, parseYyyyMmDd } from '../lib/date';
+
 interface Activity {
   date: string;   // "YYYY-MM-DD"
   count: number;
@@ -27,7 +29,7 @@ let cursor = new Date(startDate);
 while (cursor <= today) {
   const week: { iso: string; count: number }[] = [];
   for (let dow = 0; dow < 7; dow++) {
-    const iso = cursor.toISOString().slice(0, 10);
+    const iso = formatYyyyMmDd(cursor);
     const isFuture = cursor > today;
     week.push({ iso, count: isFuture ? -1 : (byDate[iso] ?? 0) });
     cursor.setDate(cursor.getDate() + 1);
@@ -40,7 +42,9 @@ const monthLabels: { label: string; col: number }[] = [];
 let lastMonth = -1;
 for (let w = 0; w < weeks.length; w++) {
   const firstDay = weeks[w][0];
-  const m = new Date(firstDay.iso + 'T12:00:00').getMonth();
+  const parsed = parseYyyyMmDd(firstDay.iso);
+  if (!parsed) continue;
+  const m = parsed.getMonth();
   if (m !== lastMonth) {
     const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     monthLabels.push({ label: monthNames[m], col: w });

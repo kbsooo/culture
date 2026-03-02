@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBar from '../components/NavBar.astro';
+import GenreChart from '../components/GenreChart.astro';
+import moviesRaw from '../../../data/movies.json';
+import booksRaw from '../../../data/books.json';
+
+const movies = [...moviesRaw];
+const books = [...booksRaw];
+
+const totalMovies = movies.length;
+const totalBooks = books.length;
+
+const totalRatingCount = [...movies, ...books].filter(item => Number.isFinite(item.rating)).length;
+const avgRating = totalRatingCount > 0
+  ? ([...movies, ...books].reduce((sum, item) => sum + (item.rating ?? 0), 0) / totalRatingCount).toFixed(1)
+  : null;
+
+const runtimeKnownMovies = movies.filter(m => Number.isFinite(m.runtime) && (m.runtime ?? 0) > 0);
+const totalRuntimeMin = runtimeKnownMovies.reduce((sum, m) => sum + (m.runtime ?? 0), 0);
+const totalRuntimeHour = totalRuntimeMin / 60;
+const avgRuntimeMin = runtimeKnownMovies.length > 0
+  ? Math.round(totalRuntimeMin / runtimeKnownMovies.length)
+  : null;
+const runtimeUnknownCount = totalMovies - runtimeKnownMovies.length;
+
+const pageKnownBooks = books.filter(b => Number.isFinite(b.pages) && (b.pages ?? 0) > 0);
+const totalPages = pageKnownBooks.reduce((sum, b) => sum + (b.pages ?? 0), 0);
+const avgPages = pageKnownBooks.length > 0
+  ? Math.round(totalPages / pageKnownBooks.length)
+  : null;
+const readingDaysKnownBooks = books.filter(b => Number.isFinite(b.reading_days) && (b.reading_days ?? 0) >= 0);
+const totalReadingDays = readingDaysKnownBooks.reduce((sum, b) => sum + (b.reading_days ?? 0), 0);
+
+const movieGenreMap = new Map<string, number>();
+for (const movie of movies) {
+  for (const genre of (movie.genres ?? [])) {
+    const key = String(genre).trim();
+    if (!key) continue;
+    movieGenreMap.set(key, (movieGenreMap.get(key) ?? 0) + 1);
+  }
+}
+const topMovieGenres = Array.from(movieGenreMap.entries())
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 8);
+
+const bookSubjectMap = new Map<string, number>();
+for (const book of books) {
+  for (const subject of (book.subjects ?? [])) {
+    const key = String(subject).trim();
+    if (!key || key === '국내도서' || key === '외국도서') continue;
+    bookSubjectMap.set(key, (bookSubjectMap.get(key) ?? 0) + 1);
+  }
+}
+const topBookSubjects = Array.from(bookSubjectMap.entries())
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 8);
+
+const now = new Date();
+const monthlyRows = [];
+for (let i = 11; i >= 0; i--) {
+  const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const movieCount = movies.filter(m => m.watched_date?.startsWith(monthKey)).length;
+  const bookCount = books.filter(b => b.finish_date?.startsWith(monthKey)).length;
+  monthlyRows.push({
+    key: monthKey,
+    label: `${String(d.getFullYear()).slice(2)}.${String(d.getMonth() + 1).padStart(2, '0')}`,
+    total: movieCount + bookCount,
+    movieCount,
+    bookCount,
+  });
+}
+const maxMonthlyTotal = Math.max(1, ...monthlyRows.map(row => row.total));
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+---
+
+<BaseLayout title="통계">
+  <NavBar slot="nav" />
+
+  <div class="mb-12">
+    <p class="label mb-3">요약</p>
+    <h1 class="text-4xl font-bold tracking-tight" style="color: var(--text-1)">통계</h1>
+    <p class="text-sm font-mono mt-2" style="color: var(--text-2)">
+      전체 {totalMovies + totalBooks}개 기록
+      {avgRating && <span style="color: var(--accent)"> · 평균 평점 ★ {avgRating}</span>}
+    </p>
+  </div>
+
+  <section class="mb-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="stat-box">
+      <p class="label mb-2">영화 시청 시간</p>
+      <p class="display-num">{totalRuntimeHour.toFixed(1)}h</p>
+      <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+        {totalRuntimeMin.toLocaleString('ko-KR')}분 · 평균 {avgRuntimeMin ?? '—'}분
+      </p>
+      {runtimeUnknownCount > 0 && (
+        <p class="text-[11px] mt-1" style="color: var(--text-3)">
+          러닝타임 미확인 {runtimeUnknownCount}편
+        </p>
+      )}
+    </div>
+
+    <div class="stat-box">
+      <p class="label mb-2">읽은 페이지</p>
+      <p class="display-num">{totalPages.toLocaleString('ko-KR')}p</p>
+      <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+        평균 {avgPages ?? '—'}p · 완독 {totalBooks}권
+      </p>
+    </div>
+
+    <div class="stat-box">
+      <p class="label mb-2">독서 기간</p>
+      <p class="display-num">{totalReadingDays.toLocaleString('ko-KR')}d</p>
+      <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+        일수 기록된 책 {readingDaysKnownBooks.length}권
+      </p>
+    </div>
+
+    <div class="stat-box">
+      <p class="label mb-2">콘텐츠 수</p>
+      <p class="display-num">{(totalMovies + totalBooks).toLocaleString('ko-KR')}</p>
+      <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+        영화 {totalMovies} · 책 {totalBooks}
+      </p>
+    </div>
+  </section>
+
+  <section class="mb-14 grid gap-8 lg:grid-cols-2">
+    <div class="stat-box">
+      <div class="flex items-baseline justify-between gap-2 mb-4">
+        <p class="label">영화 장르 TOP</p>
+        {totalMovies > 0 && <a href={`${base}/movies/`} class="text-xs font-mono" style="color: var(--text-3)">영화 목록 →</a>}
+      </div>
+      {topMovieGenres.length > 0 ? (
+        <GenreChart data={topMovieGenres} />
+      ) : (
+        <p class="text-sm" style="color: var(--text-2)">장르 데이터가 아직 없어요.</p>
+      )}
+    </div>
+
+    <div class="stat-box">
+      <div class="flex items-baseline justify-between gap-2 mb-4">
+        <p class="label">책 주제 TOP</p>
+        {totalBooks > 0 && <a href={`${base}/books/`} class="text-xs font-mono" style="color: var(--text-3)">책 목록 →</a>}
+      </div>
+      {topBookSubjects.length > 0 ? (
+        <GenreChart data={topBookSubjects} />
+      ) : (
+        <p class="text-sm" style="color: var(--text-2)">주제 데이터가 아직 없어요.</p>
+      )}
+    </div>
+  </section>
+
+  <section class="stat-box">
+    <p class="label mb-4">최근 12개월 활동</p>
+    <div class="space-y-2.5">
+      {monthlyRows.map(row => (
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono w-12 shrink-0" style="color: var(--text-3)">{row.label}</span>
+          <div class="flex-1 h-2 rounded-full overflow-hidden" style="background: var(--border);">
+            <div class="h-full rounded-full"
+                 style={`width:${(row.total / maxMonthlyTotal * 100).toFixed(1)}%; background: var(--accent);`} />
+          </div>
+          <span class="text-xs font-mono w-16 text-right shrink-0" style="color: var(--text-2)">
+            {row.total}개
+          </span>
+        </div>
+      ))}
+    </div>
+    <p class="text-xs font-mono mt-4" style="color: var(--text-3)">
+      영화/책 완료일 기준 합산입니다.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .stat-box {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+</style>
