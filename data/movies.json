@@ -65,6 +65,28 @@
     "tmdb_rating": 6
   },
   {
+    "id": 47,
+    "user_title": "쥬라기 월드: 새로운 시작",
+    "rating": 3,
+    "review": "이거 뭐냐",
+    "watched_date": "2025-07-05",
+    "added_at": "2026-03-02T06:28:20.388Z",
+    "tmdb_id": 1234821,
+    "title_ko": "쥬라기 월드: 새로운 시작",
+    "title_original": "Jurassic World Rebirth",
+    "poster_path": "/ygr4hE8Qpagv8sxZbMw1mtYkcQE.jpg",
+    "backdrop_path": "/zNriRTr0kWwyaXPzdg1EIxf0BWk.jpg",
+    "release_date": "2025-07-01",
+    "genres": [
+      "SF",
+      "모험",
+      "액션"
+    ],
+    "runtime": 134,
+    "overview": "지구 최상위 포식자가 된 공룡들이 인간 세상으로 나온 5년 후, 인간과 공룡의 위태로운 공존이 이어지는 가운데 인류를 구할 신약 개발을 위해 육지, 하늘, 바다를 지배하는 가장 거대한 공룡들의 DNA가 필요하게 된다. 불가능한 미션 수행을 위해 조라와 헨리 박사 그리고 던컨은 공룡들을 추적하며 지구상에서 가장 위험한 섬에 도착하고 폐쇄된 쥬라기 공원의 연구소가 감추어 온 충격적인 진실을 마주하게 되는데...",
+    "tmdb_rating": 6.307
+  },
+  {
     "id": 48,
     "user_title": "A MINECRAFT MOVIE",
     "rating": 6,
