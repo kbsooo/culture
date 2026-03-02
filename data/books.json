@@ -221,5 +221,32 @@
     ],
     "pages": null,
     "isbn": "9791140701353"
+  },
+  {
+    "id": 15,
+    "user_title": "신은 주사위 놀이를 하지 않는다",
+    "rating": 8,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T06:00:20.446Z",
+    "aladin_item_id": 325165808,
+    "title_normalized": "신은 주사위 놀이를 하지 않는다 - 로또부터 진화까지, 우연한 일들의 법칙",
+    "authors": [
+      "데이비드 핸드",
+      "전대호"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/32516/58/cover200/k512935923_1.jpg",
+    "cover_id": null,
+    "publisher": "더퀘스트",
+    "first_publish_year": 2023,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "기초과학/교양과학"
+    ],
+    "pages": null,
+    "isbn": "9791140706327"
   }
 ]
