@@ -20,6 +20,33 @@
     "isbn": null
   },
   {
+    "id": 39,
+    "user_title": "알고리즘으로 철학하기",
+    "rating": 7,
+    "review": "철학자들의 생각과 알고리즘의 비슷한 내용을 풀어서 알고리즘을 설명하는 책",
+    "start_date": "2025-04-22",
+    "finish_date": "2025-06-20",
+    "reading_days": 59,
+    "added_at": "2026-03-02T06:06:00.714Z",
+    "aladin_item_id": 362362165,
+    "title_normalized": "알고리즘으로 철학하기 - 코드 너머의 사유, 기술과 존재를 잇다",
+    "authors": [
+      "변정수"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/36236/21/cover200/k672038607_1.jpg",
+    "cover_id": null,
+    "publisher": "이상북스",
+    "first_publish_year": 2025,
+    "subjects": [
+      "국내도서",
+      "인문학",
+      "철학 일반",
+      "교양 철학"
+    ],
+    "pages": null,
+    "isbn": "9791194144076"
+  },
+  {
     "id": 37,
     "user_title": "기계는 왜 학습하는가",
     "rating": 10,
