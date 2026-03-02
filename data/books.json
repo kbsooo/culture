@@ -165,5 +165,33 @@
     ],
     "pages": null,
     "isbn": "9791191464719"
+  },
+  {
+    "id": 10,
+    "user_title": "챗GPT가 쏘아올린 신직업 프롬프트 엔지니어",
+    "rating": 4,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T05:57:02.717Z",
+    "aladin_item_id": 314951304,
+    "title_normalized": "챗GPT가 쏘아올린 신직업 프롬프트 엔지니어",
+    "authors": [
+      "서승완",
+      "채시은"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/31495/13/cover200/k082832334_1.jpg",
+    "cover_id": null,
+    "publisher": "애드앤미디어",
+    "first_publish_year": 2023,
+    "subjects": [
+      "국내도서",
+      "경제경영",
+      "마케팅/세일즈",
+      "마케팅/브랜드"
+    ],
+    "pages": null,
+    "isbn": "9791198240804"
   }
 ]
