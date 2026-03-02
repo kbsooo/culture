@@ -1,5 +1,32 @@
 [
   {
+    "id": 42,
+    "user_title": "기억의 미래",
+    "rating": 8,
+    "review": "뇌과학 관점에서 신경망의 가능성과 데미스 하사비스의 생각을 조금 넣음",
+    "start_date": "2025-08-12",
+    "finish_date": "2025-08-31",
+    "reading_days": 19,
+    "added_at": "2026-03-02T06:07:58.696Z",
+    "aladin_item_id": 369339713,
+    "title_normalized": "기억의 미래 - 언제나 최적의 선택을 찾아내는 우리 뇌의 비밀",
+    "authors": [
+      "정민환"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/36933/97/cover200/k662030316_1.jpg",
+    "cover_id": null,
+    "publisher": "심심",
+    "first_publish_year": 2025,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "뇌과학",
+      "뇌과학 일반"
+    ],
+    "pages": null,
+    "isbn": "9791172540661"
+  },
+  {
     "id": 38,
     "user_title": "The Technological Republic",
     "rating": 7,
