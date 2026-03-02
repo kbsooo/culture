@@ -21,11 +21,12 @@ const { book } = Astro.props;
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 
-const coverUrl = book.cover_url
+const resolvedCoverUrl = book.cover_url
   ? book.cover_url
   : book.cover_id
     ? `https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`
     : `${base}/placeholder-book.svg`;
+const coverUrl = resolvedCoverUrl.replace(/^http:\/\//i, 'https://');
 
 const displayTitle = book.user_title || book.title_normalized;
 

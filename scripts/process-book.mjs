@@ -29,35 +29,72 @@ function parseAuthors(rawAuthor) {
     .filter(Boolean);
 }
 
+function normalizeCoverUrl(raw) {
+  if (!raw || typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith('//')) return `https:${trimmed}`;
+  return trimmed.replace(/^http:\/\//i, 'https://');
+}
+
+function buildQueryCandidates(title) {
+  const base = (title ?? '').trim();
+  if (!base) return [];
+
+  const candidates = [base];
+  const separators = [' - ', ' – ', ' — ', ' : ', ': '];
+  for (const sep of separators) {
+    const idx = base.indexOf(sep);
+    if (idx > 0) {
+      candidates.push(base.slice(0, idx).trim());
+    }
+  }
+  return Array.from(new Set(candidates.filter(Boolean)));
+}
+
 async function fetchAladinBookData(title, ttbKey) {
   if (!ttbKey) {
     console.warn('[Aladin] ALADIN_TTB_KEY is not set. Continue without metadata.');
     return null;
   }
 
-  const url = new URL('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx');
-  url.searchParams.set('ttbkey', ttbKey);
-  url.searchParams.set('Query', title);
-  url.searchParams.set('QueryType', 'Keyword');
-  url.searchParams.set('SearchTarget', 'Book');
-  url.searchParams.set('MaxResults', '5');
-  url.searchParams.set('start', '1');
-  url.searchParams.set('output', 'js');
-  url.searchParams.set('Version', '20131101');
+  let selectedBook = null;
+  const queryCandidates = buildQueryCandidates(title);
+  const queryTypes = ['Title', 'Keyword'];
 
-  const res = await fetch(url);
-  if (!res.ok) {
-    console.warn(`[Aladin] API error: ${res.status} ${res.statusText}`);
-    return null;
+  for (const query of queryCandidates) {
+    for (const queryType of queryTypes) {
+      const url = new URL('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx');
+      url.searchParams.set('ttbkey', ttbKey);
+      url.searchParams.set('Query', query);
+      url.searchParams.set('QueryType', queryType);
+      url.searchParams.set('SearchTarget', 'Book');
+      url.searchParams.set('MaxResults', '10');
+      url.searchParams.set('start', '1');
+      url.searchParams.set('output', 'js');
+      url.searchParams.set('Version', '20131101');
+
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.warn(`[Aladin] API error (${queryType}): ${res.status} ${res.statusText}`);
+        continue;
+      }
+
+      const data = await res.json();
+      if (!Array.isArray(data.item) || data.item.length === 0) continue;
+
+      selectedBook = data.item.find(item => normalizeCoverUrl(item.cover)) ?? data.item[0];
+      if (selectedBook) break;
+    }
+    if (selectedBook) break;
   }
 
-  const data = await res.json();
-  if (!Array.isArray(data.item) || data.item.length === 0) {
+  if (!selectedBook) {
     console.warn(`[Aladin] No results for: "${title}"`);
     return null;
   }
 
-  const book = data.item[0];
+  const book = selectedBook;
   const year = parseInt((book.pubDate ?? '').slice(0, 4), 10);
   const categories = (book.categoryName ?? '')
     .split('>')
@@ -68,7 +105,7 @@ async function fetchAladinBookData(title, ttbKey) {
     aladin_item_id: book.itemId ?? null,
     title: book.title ?? null,
     authors: parseAuthors(book.author),
-    cover_url: book.cover ?? null,
+    cover_url: normalizeCoverUrl(book.cover),
     publisher: book.publisher ?? null,
     first_publish_year: Number.isFinite(year) ? year : null,
     subjects: categories.slice(0, 5),
@@ -139,12 +176,22 @@ async function main() {
     books = [];
   }
 
-  if (books.some(b => b.id === issueNumber)) {
-    console.log(`[skip] Issue #${issueNumber} already exists in books.json`);
-    process.exit(0);
+  const existingIndex = books.findIndex(b => b.id === issueNumber);
+  if (existingIndex >= 0) {
+    const existing = books[existingIndex];
+    books[existingIndex] = {
+      ...existing,
+      ...record,
+      // Preserve legacy OpenLibrary keys if they exist in old records.
+      ol_key: existing.ol_key ?? null,
+      // Keep existing cover if current lookup fails.
+      cover_url: record.cover_url ?? existing.cover_url ?? null,
+      cover_id: record.cover_id ?? existing.cover_id ?? null,
+    };
+    console.log(`[update] Updated existing book entry for issue #${issueNumber}`);
+  } else {
+    books.push(record);
   }
-
-  books.push(record);
   // Dated entries first (desc), undated at end
   books.sort((a, b) => {
     if (!a.finish_date && !b.finish_date) return 0;
