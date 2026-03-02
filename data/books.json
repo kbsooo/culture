@@ -193,5 +193,33 @@
     ],
     "pages": null,
     "isbn": "9791198240804"
+  },
+  {
+    "id": 12,
+    "user_title": "데이터는 어떻게 인생의 무기가 되는가",
+    "rating": 8,
+    "review": "",
+    "start_date": null,
+    "finish_date": null,
+    "reading_days": null,
+    "added_at": "2026-03-02T05:59:55.677Z",
+    "aladin_item_id": 302167439,
+    "title_normalized": "데이터는 어떻게 인생의 무기가 되는가 - 당신의 모든 선택에서 진짜 원하는 것을 얻는 법",
+    "authors": [
+      "세스 스티븐스 다비도위츠",
+      "안진이"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/30216/74/cover200/k372839494_1.jpg",
+    "cover_id": null,
+    "publisher": "더퀘스트",
+    "first_publish_year": 2022,
+    "subjects": [
+      "국내도서",
+      "자기계발",
+      "성공",
+      "성공학"
+    ],
+    "pages": null,
+    "isbn": "9791140701353"
   }
 ]
