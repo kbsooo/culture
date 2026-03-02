@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBar from '../components/NavBar.astro';
+import StatsPanel from '../components/StatsPanel.astro';
+import HeatmapCalendar from '../components/HeatmapCalendar.astro';
+import MovieCard from '../components/MovieCard.astro';
+import BookCard from '../components/BookCard.astro';
+
+import moviesRaw from '../../../data/movies.json';
+import booksRaw from '../../../data/books.json';
+
+// Heatmap: movies by watched_date, books by full reading span
+const activityMap = new Map<string, number>();
+const MS_PER_DAY = 86_400_000;
+
+for (const m of moviesRaw) {
+  if (!m.watched_date) continue;
+  activityMap.set(m.watched_date, (activityMap.get(m.watched_date) ?? 0) + 1);
+}
+for (const b of booksRaw) {
+  if (!b.finish_date) continue;
+  const start = b.start_date ? new Date(b.start_date) : new Date(b.finish_date);
+  const end   = new Date(b.finish_date);
+  for (let t = start.getTime(); t <= end.getTime(); t += MS_PER_DAY) {
+    const d = new Date(t).toISOString().slice(0, 10);
+    activityMap.set(d, (activityMap.get(d) ?? 0) + 1);
+  }
+}
+let activityData = Array.from(activityMap.entries()).map(([date, count]) => ({ date, count }));
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const calendarStart = new Date(today);
+calendarStart.setDate(calendarStart.getDate() - 365);
+const todayIso = today.toISOString().slice(0, 10);
+const calendarStartIso = calendarStart.toISOString().slice(0, 10);
+
+function buildSampleActivityData(baseDate: Date) {
+  const sampleData: { date: string; count: number }[] = [];
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(baseDate.getTime() - i * MS_PER_DAY);
+    const iso = d.toISOString().slice(0, 10);
+    // Deterministic pattern: ~40% of days have activity, varied intensity
+    const s1 = (i * 17 + 3) % 100;
+    const s2 = (i * 31 + 7) % 100;
+    const dow = d.getDay();
+    const isWeekend = dow === 0 || dow === 6;
+    // Higher baseline on weekends; bursts every ~3 weeks
+    const threshold = isWeekend ? 55 : 40;
+    if (s1 < threshold) {
+      const count = s2 < 10 ? 4 : s2 < 25 ? 3 : s2 < 50 ? 2 : 1;
+      sampleData.push({ date: iso, count });
+    }
+  }
+  return sampleData;
+}
+
+// Keep only dates that can appear in the current 53-week heatmap window.
+const recentActivityData = activityData.filter(
+  ({ date }) => date >= calendarStartIso && date <= todayIso
+);
+
+// Show sample data when recent activity is sparse, and keep real recent entries.
+if (recentActivityData.length < 20) {
+  const sampleByDate = new Map(
+    buildSampleActivityData(today).map(({ date, count }) => [date, count] as const)
+  );
+  for (const { date, count } of recentActivityData) {
+    sampleByDate.set(date, Math.max(sampleByDate.get(date) ?? 0, count));
+  }
+  activityData = Array.from(sampleByDate.entries()).map(([date, count]) => ({ date, count }));
+} else {
+  activityData = recentActivityData;
+}
+
+// Sort recent movies/books — dated first
+const recentMovies = [...moviesRaw]
+  .sort((a, b) => (b.watched_date ?? '').localeCompare(a.watched_date ?? ''))
+  .slice(0, 6);
+const recentBooks = [...booksRaw]
+  .sort((a, b) => (b.finish_date ?? '').localeCompare(a.finish_date ?? ''))
+  .slice(0, 6);
+const hasContent = moviesRaw.length > 0 || booksRaw.length > 0;
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+---
+
+<BaseLayout title="홈">
+  <NavBar slot="nav" />
+
+  <!-- Page title -->
+  <div class="mb-12">
+    <p class="label mb-3">강병수의 문화생활</p>
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight leading-none" style="color: var(--text-1)">
+      기록
+    </h1>
+  </div>
+
+  <!-- Stats strip (always visible) -->
+  <StatsPanel movies={moviesRaw} books={booksRaw} />
+
+  <!-- Activity calendar (always visible — shows sample data when empty) -->
+  <section class="mb-16">
+    <p class="label mb-5">활동 캘린더</p>
+    <HeatmapCalendar data={activityData} />
+  </section>
+
+  {hasContent ? (
+    <Fragment>
+      <!-- Recent movies -->
+      {recentMovies.length > 0 && (
+        <section class="mb-16">
+          <div class="flex items-baseline justify-between mb-5">
+            <p class="label">최근 영화</p>
+            {moviesRaw.length > 6 && (
+              <a href={`${base}/movies/`}
+                 class="text-xs font-mono transition-colors"
+                 style="color: var(--text-3);"
+                 onmouseover="this.style.color='var(--accent)'"
+                 onmouseout="this.style.color='var(--text-3)'"
+              >전체 보기 →</a>
+            )}
+          </div>
+          <div class="grid grid-cols-cards gap-5">
+            {recentMovies.map(movie => <MovieCard movie={movie} />)}
+          </div>
+        </section>
+      )}
+
+      <!-- Recent books -->
+      {recentBooks.length > 0 && (
+        <section class="mb-16">
+          <div class="flex items-baseline justify-between mb-5">
+            <p class="label">최근 책</p>
+            {booksRaw.length > 6 && (
+              <a href={`${base}/books/`}
+                 class="text-xs font-mono transition-colors"
+                 style="color: var(--text-3);"
+                 onmouseover="this.style.color='var(--accent)'"
+                 onmouseout="this.style.color='var(--text-3)'"
+              >전체 보기 →</a>
+            )}
+          </div>
+          <div class="grid grid-cols-cards gap-5">
+            {recentBooks.map(book => <BookCard book={book} />)}
+          </div>
+        </section>
+      )}
+    </Fragment>
+  ) : (
+    <div class="py-16 text-center">
+      <p class="label mb-6">아직 기록이 없어요</p>
+      <p class="text-sm" style="color: var(--text-2)">
+        GitHub Issues에서 영화나 책을 기록해보세요
+      </p>
+    </div>
+  )}
+</BaseLayout>

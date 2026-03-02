@@ -1,0 +1,132 @@
+---
+interface Activity {
+  date: string;   // "YYYY-MM-DD"
+  count: number;
+}
+interface Props {
+  data: Activity[];
+}
+
+const { data } = Astro.props;
+
+// Build a map for O(1) lookup
+const byDate: Record<string, number> = {};
+for (const { date, count } of data) byDate[date] = count;
+
+// Build 53-week grid ending today
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+// Start from the Sunday 52 weeks ago
+const startDate = new Date(today);
+startDate.setDate(startDate.getDate() - 52 * 7 - startDate.getDay());
+
+// Build week columns
+const weeks: { iso: string; count: number }[][] = [];
+let cursor = new Date(startDate);
+while (cursor <= today) {
+  const week: { iso: string; count: number }[] = [];
+  for (let dow = 0; dow < 7; dow++) {
+    const iso = cursor.toISOString().slice(0, 10);
+    const isFuture = cursor > today;
+    week.push({ iso, count: isFuture ? -1 : (byDate[iso] ?? 0) });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  weeks.push(week);
+}
+
+// Month labels: one per month, positioned at the week where it starts
+const monthLabels: { label: string; col: number }[] = [];
+let lastMonth = -1;
+for (let w = 0; w < weeks.length; w++) {
+  const firstDay = weeks[w][0];
+  const m = new Date(firstDay.iso + 'T12:00:00').getMonth();
+  if (m !== lastMonth) {
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    monthLabels.push({ label: monthNames[m], col: w });
+    lastMonth = m;
+  }
+}
+---
+
+<div class="heatmap-wrap">
+  <!-- Month labels -->
+  <div class="heatmap-months" style={`grid-template-columns: repeat(${weeks.length}, 1fr);`}>
+    {weeks.map((_, i) => {
+      const label = monthLabels.find(ml => ml.col === i);
+      return <span class="heatmap-month-label">{label ? label.label : ''}</span>;
+    })}
+  </div>
+
+  <!-- Cell grid -->
+  <div class="heatmap-grid" style={`grid-template-columns: repeat(${weeks.length}, 1fr);`}>
+    {weeks.map(week => (
+      <div class="heatmap-week">
+        {week.map(({ iso, count }) => (
+          <div
+            class={`heatmap-cell ${count < 0 ? 'future' : count === 0 ? 'empty' : count === 1 ? 'l1' : count === 2 ? 'l2' : count <= 4 ? 'l3' : 'l4'}`}
+            title={count >= 0 ? `${iso}${count > 0 ? ` — ${count}개` : ''}` : ''}
+          />
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .heatmap-wrap {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .heatmap-months {
+    display: grid;
+    margin-bottom: 4px;
+    min-width: max-content;
+  }
+  .heatmap-month-label {
+    font-size: 10px;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text-3);
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .heatmap-grid {
+    display: grid;
+    gap: 3px;
+    min-width: max-content;
+  }
+
+  .heatmap-week {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .heatmap-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Light mode */
+  .heatmap-cell.future  { background: transparent; }
+  .heatmap-cell.empty   { background: var(--border); }
+  .heatmap-cell.l1      { background: #c9933a44; }
+  .heatmap-cell.l2      { background: #c9933a88; }
+  .heatmap-cell.l3      { background: #c9933acc; }
+  .heatmap-cell.l4      { background: #c9933a; }
+
+  /* Dark mode */
+  :global(html.dark) .heatmap-cell.empty { background: var(--border); }
+  :global(html.dark) .heatmap-cell.l1   { background: #5a3e10; }
+  :global(html.dark) .heatmap-cell.l2   { background: #8a5f1a; }
+  :global(html.dark) .heatmap-cell.l3   { background: #b8832a; }
+  :global(html.dark) .heatmap-cell.l4   { background: #d4a853; }
+
+  @media (max-width: 640px) {
+    .heatmap-cell { width: 10px; height: 10px; }
+  }
+</style>

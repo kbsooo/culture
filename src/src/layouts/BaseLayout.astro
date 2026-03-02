@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = '강병수의 문화생활 — 영화와 책 기록' } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+---
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title} — 강병수의 문화생활</title>
+  <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <!-- Pretendard: Korean body font -->
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <!-- JetBrains Mono: numbers, dates, metadata -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script is:inline>
+    // Prevent FOMT (Flash of Mismatched Theme)
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'light' || (!saved && !prefersDark)) {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen font-sans">
+  <slot name="nav" />
+  <main class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-12">
+    <slot />
+  </main>
+  <footer class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-8 mt-4"
+          style="border-top: 1px solid var(--border)">
+    <p class="label">강병수의 문화생활 · {new Date().getFullYear()}</p>
+  </footer>
+</body>
+</html>

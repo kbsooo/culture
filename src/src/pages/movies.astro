@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBar from '../components/NavBar.astro';
+import MovieCard from '../components/MovieCard.astro';
+import moviesRaw from '../../../data/movies.json';
+
+// Dated first (desc), undated at end
+const movies = [...moviesRaw].sort((a, b) => {
+  if (!a.watched_date && !b.watched_date) return 0;
+  if (!a.watched_date) return 1;
+  if (!b.watched_date) return -1;
+  return b.watched_date.localeCompare(a.watched_date);
+});
+
+const avgRating = movies.length
+  ? (movies.reduce((s, m) => s + (m.rating ?? 0), 0) / movies.length).toFixed(1)
+  : null;
+
+const byYear: Record<string, number> = {};
+for (const m of movies) {
+  const y = m.watched_date?.slice(0, 4) ?? '날짜 미상';
+  byYear[y] = (byYear[y] ?? 0) + 1;
+}
+// Sort years desc; put '날짜 미상' last
+const years = Object.entries(byYear).sort((a, b) => {
+  if (a[0] === '날짜 미상') return 1;
+  if (b[0] === '날짜 미상') return -1;
+  return b[0].localeCompare(a[0]);
+});
+---
+
+<BaseLayout title="영화">
+  <NavBar slot="nav" />
+
+  <!-- Header -->
+  <div class="mb-10 flex items-end justify-between gap-6 flex-wrap">
+    <div>
+      <p class="label mb-3">컬렉션</p>
+      <h1 class="text-4xl font-bold tracking-tight" style="color: var(--text-1)">영화</h1>
+      <p class="text-sm font-mono mt-2" style="color: var(--text-2)">
+        {movies.length}편
+        {avgRating && <span style="color: var(--accent)"> · ★ {avgRating}</span>}
+      </p>
+    </div>
+
+    {years.length > 1 && (
+      <div class="flex flex-wrap gap-1.5" id="year-filter">
+        <button class="year-btn" data-year="all"
+          style="font-size:0.7rem; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.75rem; border-radius:4px; border:1px solid var(--accent); color:var(--accent); background:transparent; cursor:pointer; transition:all .15s;">
+          전체
+        </button>
+        {years.map(([year, count]) => (
+          <button class="year-btn" data-year={year}
+            style="font-size:0.7rem; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.75rem; border-radius:4px; border:1px solid var(--border); color:var(--text-2); background:transparent; cursor:pointer; transition:all .15s;">
+            {year}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+
+  {movies.length > 0 ? (
+    <div class="grid grid-cols-cards gap-5" id="movies-grid">
+      {movies.map(movie => (
+        <div data-year={movie.watched_date?.slice(0, 4) ?? '날짜 미상'}>
+          <MovieCard movie={movie} />
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div class="py-24 text-center">
+      <p class="label">아직 영화 기록이 없어요</p>
+    </div>
+  )}
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.year-btn');
+  const cards   = document.querySelectorAll<HTMLElement>('#movies-grid > div[data-year]');
+  const ACTIVE  = 'border:1px solid var(--accent); color:var(--accent);';
+  const IDLE    = 'border:1px solid var(--border); color:var(--text-2);';
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const year = btn.dataset.year;
+      buttons.forEach(b => {
+        const isThis = b === btn;
+        b.style.borderColor = isThis ? 'var(--accent)' : 'var(--border)';
+        b.style.color       = isThis ? 'var(--accent)' : 'var(--text-2)';
+      });
+      cards.forEach(card => {
+        card.style.display = (year === 'all' || card.dataset.year === year) ? '' : 'none';
+      });
+    });
+  });
+</script>

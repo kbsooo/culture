@@ -1,0 +1,84 @@
+---
+interface Props {
+  book: {
+    id: number;
+    title_normalized: string;
+    user_title: string;
+    authors?: string[];
+    cover_id?: number | null;
+    rating: number;
+    review?: string;
+    start_date?: string | null;
+    finish_date?: string | null;
+    reading_days?: number | null;
+    pages?: number | null;
+    first_publish_year?: number | null;
+  };
+}
+
+const { book } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+
+const coverUrl = book.cover_id
+  ? `https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`
+  : `${base}/placeholder-book.svg`;
+
+const displayTitle = book.user_title || book.title_normalized;
+
+function fmtDate(d: string | null | undefined) {
+  if (!d) return null;
+  return new Date(d + 'T12:00:00').toLocaleDateString('ko-KR', {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+  });
+}
+
+const finishStr = fmtDate(book.finish_date);
+---
+
+<article class="group cursor-default" style="color: var(--text-1)">
+  <!-- Cover -->
+  <div class="aspect-[2/3] overflow-hidden rounded-sm mb-3"
+       style="background: var(--border);">
+    <img
+      src={coverUrl}
+      alt={`${displayTitle} 표지`}
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+      onerror={`this.src='${base}/placeholder-book.svg'`}
+    />
+  </div>
+
+  <!-- Info -->
+  <div class="space-y-0.5 px-0.5">
+    <h3 class="text-sm font-medium leading-snug line-clamp-2" style="color: var(--text-1)">
+      {displayTitle}
+    </h3>
+
+    {book.authors && book.authors.length > 0 && (
+      <p class="text-[11px] truncate" style="color: var(--text-2)">
+        {book.authors.join(', ')}
+      </p>
+    )}
+
+    <div class="flex items-center justify-between gap-2">
+      {finishStr
+        ? <span class="text-[11px] font-mono" style="color: var(--text-3)">
+            {finishStr}
+            {book.reading_days && ` · ${book.reading_days}일`}
+          </span>
+        : <span class="text-[11px] font-mono" style="color: var(--text-3)">날짜 미상</span>
+      }
+      <span class="text-[11px] font-mono shrink-0" style="color: var(--accent)">
+        ★ {book.rating}
+      </span>
+    </div>
+
+    {book.review && (
+      <p class="text-[11px] leading-relaxed line-clamp-2 pt-0.5" style="color: var(--text-2)">
+        {book.review}
+      </p>
+    )}
+  </div>
+</article>

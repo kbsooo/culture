@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBar from '../components/NavBar.astro';
+import BookCard from '../components/BookCard.astro';
+import booksRaw from '../../../data/books.json';
+
+// Dated first (desc), undated at end
+const books = [...booksRaw].sort((a, b) => {
+  if (!a.finish_date && !b.finish_date) return 0;
+  if (!a.finish_date) return 1;
+  if (!b.finish_date) return -1;
+  return b.finish_date.localeCompare(a.finish_date);
+});
+
+const avgRating = books.length
+  ? (books.reduce((s, b) => s + (b.rating ?? 0), 0) / books.length).toFixed(1)
+  : null;
+
+const totalPages = books.reduce((s, b) => s + (b.pages ?? 0), 0);
+
+const byYear: Record<string, number> = {};
+for (const b of books) {
+  const y = b.finish_date?.slice(0, 4) ?? '날짜 미상';
+  byYear[y] = (byYear[y] ?? 0) + 1;
+}
+const years = Object.entries(byYear).sort((a, b) => {
+  if (a[0] === '날짜 미상') return 1;
+  if (b[0] === '날짜 미상') return -1;
+  return b[0].localeCompare(a[0]);
+});
+---
+
+<BaseLayout title="책">
+  <NavBar slot="nav" />
+
+  <div class="mb-10 flex items-end justify-between gap-6 flex-wrap">
+    <div>
+      <p class="label mb-3">컬렉션</p>
+      <h1 class="text-4xl font-bold tracking-tight" style="color: var(--text-1)">책</h1>
+      <p class="text-sm font-mono mt-2" style="color: var(--text-2)">
+        {books.length}권
+        {avgRating && <span style="color: var(--accent)"> · ★ {avgRating}</span>}
+        {totalPages > 0 && ` · ${totalPages.toLocaleString('ko')}p`}
+      </p>
+    </div>
+
+    {years.length > 1 && (
+      <div class="flex flex-wrap gap-1.5" id="year-filter">
+        <button class="year-btn" data-year="all"
+          style="font-size:0.7rem; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.75rem; border-radius:4px; border:1px solid var(--accent); color:var(--accent); background:transparent; cursor:pointer; transition:all .15s;">
+          전체
+        </button>
+        {years.map(([year, count]) => (
+          <button class="year-btn" data-year={year}
+            style="font-size:0.7rem; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.75rem; border-radius:4px; border:1px solid var(--border); color:var(--text-2); background:transparent; cursor:pointer; transition:all .15s;">
+            {year}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+
+  {books.length > 0 ? (
+    <div class="grid grid-cols-cards gap-5" id="books-grid">
+      {books.map(book => (
+        <div data-year={book.finish_date?.slice(0, 4) ?? '날짜 미상'}>
+          <BookCard book={book} />
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div class="py-24 text-center">
+      <p class="label">아직 책 기록이 없어요</p>
+    </div>
+  )}
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.year-btn');
+  const cards   = document.querySelectorAll<HTMLElement>('#books-grid > div[data-year]');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const year = btn.dataset.year;
+      buttons.forEach(b => {
+        const isThis = b === btn;
+        b.style.borderColor = isThis ? 'var(--accent)' : 'var(--border)';
+        b.style.color       = isThis ? 'var(--accent)' : 'var(--text-2)';
+      });
+      cards.forEach(card => {
+        card.style.display = (year === 'all' || card.dataset.year === year) ? '' : 'none';
+      });
+    });
+  });
+</script>

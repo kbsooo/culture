@@ -1,0 +1,32 @@
+---
+interface Props {
+  data: [string, number][];
+}
+
+const { data } = Astro.props;
+if (!data.length) return;
+
+const max = Math.max(...data.map(d => d[1]));
+---
+
+<!-- Clean horizontal bars — no background card wrapper, no rounded pill bars -->
+<div class="space-y-2.5">
+  {data.map(([genre, count]) => (
+    <div class="flex items-center gap-4">
+      <span class="text-xs w-16 text-right shrink-0 font-mono"
+            style="color: var(--text-2)">{genre}</span>
+      <div class="flex-1 relative h-px" style="background: var(--border)">
+        <div
+          class="absolute inset-y-0 left-0 h-px transition-all duration-700"
+          style={`width: ${(count / max * 100).toFixed(1)}%; background: var(--accent);`}
+        />
+        <!-- Thicker visual track: bar is 2px tall, centered on the line -->
+        <div
+          class="absolute -top-[1px] left-0 h-[2px] transition-all duration-700"
+          style={`width: ${(count / max * 100).toFixed(1)}%; background: var(--accent); opacity: 0.85;`}
+        />
+      </div>
+      <span class="text-xs font-mono w-4 shrink-0" style="color: var(--text-3)">{count}</span>
+    </div>
+  ))}
+</div>
