@@ -1,5 +1,32 @@
 [
   {
+    "id": 7,
+    "user_title": "피타고라스 생각 수업",
+    "rating": 8,
+    "review": "",
+    "start_date": "2024-03-11",
+    "finish_date": "2024-03-11",
+    "reading_days": 0,
+    "added_at": "2026-03-02T05:41:25.564Z",
+    "aladin_item_id": 308606027,
+    "title_normalized": "피타고라스 생각 수업 - 수학자는 어떻게 발견하고 분석하고 활용할까",
+    "authors": [
+      "이광연"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/30860/60/cover200/k822831578_1.jpg",
+    "cover_id": null,
+    "publisher": "유노라이프",
+    "first_publish_year": 2023,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "수학",
+      "수학 일반"
+    ],
+    "pages": null,
+    "isbn": "9791191104578"
+  },
+  {
     "id": 2,
     "user_title": "일머리 문해력 - 문해력은 어떻게 당신의 무기가 되는가?",
     "rating": 6,
