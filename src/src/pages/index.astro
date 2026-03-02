@@ -28,51 +28,6 @@ for (const b of booksRaw) {
 }
 let activityData = Array.from(activityMap.entries()).map(([date, count]) => ({ date, count }));
 
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const calendarStart = new Date(today);
-calendarStart.setDate(calendarStart.getDate() - 365);
-const todayIso = today.toISOString().slice(0, 10);
-const calendarStartIso = calendarStart.toISOString().slice(0, 10);
-
-function buildSampleActivityData(baseDate: Date) {
-  const sampleData: { date: string; count: number }[] = [];
-  for (let i = 0; i < 365; i++) {
-    const d = new Date(baseDate.getTime() - i * MS_PER_DAY);
-    const iso = d.toISOString().slice(0, 10);
-    // Deterministic pattern: ~40% of days have activity, varied intensity
-    const s1 = (i * 17 + 3) % 100;
-    const s2 = (i * 31 + 7) % 100;
-    const dow = d.getDay();
-    const isWeekend = dow === 0 || dow === 6;
-    // Higher baseline on weekends; bursts every ~3 weeks
-    const threshold = isWeekend ? 55 : 40;
-    if (s1 < threshold) {
-      const count = s2 < 10 ? 4 : s2 < 25 ? 3 : s2 < 50 ? 2 : 1;
-      sampleData.push({ date: iso, count });
-    }
-  }
-  return sampleData;
-}
-
-// Keep only dates that can appear in the current 53-week heatmap window.
-const recentActivityData = activityData.filter(
-  ({ date }) => date >= calendarStartIso && date <= todayIso
-);
-
-// Show sample data when recent activity is sparse, and keep real recent entries.
-if (recentActivityData.length < 20) {
-  const sampleByDate = new Map(
-    buildSampleActivityData(today).map(({ date, count }) => [date, count] as const)
-  );
-  for (const { date, count } of recentActivityData) {
-    sampleByDate.set(date, Math.max(sampleByDate.get(date) ?? 0, count));
-  }
-  activityData = Array.from(sampleByDate.entries()).map(([date, count]) => ({ date, count }));
-} else {
-  activityData = recentActivityData;
-}
-
 // Sort recent movies/books — dated first
 const recentMovies = [...moviesRaw]
   .sort((a, b) => (b.watched_date ?? '').localeCompare(a.watched_date ?? ''))
@@ -100,7 +55,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
   <!-- Stats strip (always visible) -->
   <StatsPanel movies={moviesRaw} books={booksRaw} />
 
-  <!-- Activity calendar (always visible — shows sample data when empty) -->
+  <!-- Activity calendar -->
   <section class="mb-16">
     <p class="label mb-5">활동 캘린더</p>
     <HeatmapCalendar data={activityData} />
