@@ -16,7 +16,7 @@
 1. GitHub Issues → **New Issue** → **📚 책 기록** 선택
 2. 제목, 별점, 한줄 후기, 시작일, 완독일 입력
 3. Issue **Close** → GitHub Actions가 자동으로:
-   - Open Library에서 표지 및 메타데이터 가져옴
+   - 알라딘 Open API에서 표지 및 메타데이터 가져옴
    - `data/books.json` 업데이트
    - GitHub Pages 재배포
 
@@ -25,6 +25,7 @@
 ### 1. GitHub Secrets 추가
 - Settings → Secrets and variables → Actions → **New repository secret**
 - Name: `TMDB_API_KEY`, Value: TMDB API 키
+- Name: `ALADIN_TTB_KEY`, Value: 알라딘 TTB API 키
 
 ### 2. GitHub Pages 설정
 - Settings → Pages → Source: **GitHub Actions**
@@ -50,7 +51,7 @@
 | 한국어 폰트 | Pretendard Variable |
 | 히트맵 | cal-heatmap 4 |
 | 영화 메타데이터 | TMDB API v3 |
-| 책 메타데이터 | Open Library API (인증 불필요) |
+| 책 메타데이터 | 알라딘 Open API (TTB Key 필요) |
 | 자동화 | GitHub Actions |
 | 호스팅 | GitHub Pages |
 
@@ -67,7 +68,7 @@
 │   └── books.json          # 책 기록 데이터
 ├── scripts/
 │   ├── process-movie.mjs   # TMDB API 호출 스크립트
-│   └── process-book.mjs    # Open Library API 호출 스크립트
+│   └── process-book.mjs    # 알라딘 Open API 호출 스크립트
 └── src/                    # Astro 프로젝트
     └── src/
         ├── pages/          # 홈, 영화, 책 페이지

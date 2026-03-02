@@ -43,6 +43,7 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_CREATED_AT: ${{ github.event.issue.created_at }}
+          ALADIN_TTB_KEY: ${{ secrets.ALADIN_TTB_KEY }}
         run: node scripts/process-book.mjs
 
       - name: Commit updated data files

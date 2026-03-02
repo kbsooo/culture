@@ -1,5 +1,5 @@
 // scripts/process-book.mjs
-// Parses a closed GitHub Issue (book form), fetches Open Library metadata, appends to data/books.json
+// Parses a closed GitHub Issue (book form), fetches Aladin metadata, appends to data/books.json
 
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
@@ -20,36 +20,67 @@ function parseIssueForm(body) {
   return sections;
 }
 
-async function fetchOpenLibraryData(title) {
-  // Open Library search API - no auth required
-  const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1&fields=key,title,author_name,cover_i,first_publish_year,subject,number_of_pages_median,isbn`;
+function parseAuthors(rawAuthor) {
+  if (!rawAuthor) return [];
+  // Example: "홍길동 (지은이), 김철수 (옮긴이)"
+  return rawAuthor
+    .split(',')
+    .map(s => s.replace(/\([^)]*\)/g, '').trim())
+    .filter(Boolean);
+}
 
-  const res = await fetch(searchUrl);
-  const data = await res.json();
-
-  if (!data.docs || data.docs.length === 0) {
-    console.warn(`[OpenLibrary] No results for: "${title}"`);
+async function fetchAladinBookData(title, ttbKey) {
+  if (!ttbKey) {
+    console.warn('[Aladin] ALADIN_TTB_KEY is not set. Continue without metadata.');
     return null;
   }
 
-  const book = data.docs[0];
+  const url = new URL('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx');
+  url.searchParams.set('ttbkey', ttbKey);
+  url.searchParams.set('Query', title);
+  url.searchParams.set('QueryType', 'Keyword');
+  url.searchParams.set('SearchTarget', 'Book');
+  url.searchParams.set('MaxResults', '5');
+  url.searchParams.set('start', '1');
+  url.searchParams.set('output', 'js');
+  url.searchParams.set('Version', '20131101');
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.warn(`[Aladin] API error: ${res.status} ${res.statusText}`);
+    return null;
+  }
+
+  const data = await res.json();
+  if (!Array.isArray(data.item) || data.item.length === 0) {
+    console.warn(`[Aladin] No results for: "${title}"`);
+    return null;
+  }
+
+  const book = data.item[0];
+  const year = parseInt((book.pubDate ?? '').slice(0, 4), 10);
+  const categories = (book.categoryName ?? '')
+    .split('>')
+    .map(s => s.trim())
+    .filter(Boolean);
 
   return {
-    ol_key: book.key ?? null,
+    aladin_item_id: book.itemId ?? null,
     title: book.title ?? null,
-    authors: book.author_name ?? [],
-    cover_id: book.cover_i ?? null,
-    first_publish_year: book.first_publish_year ?? null,
-    subjects: (book.subject ?? []).slice(0, 5),
-    pages: book.number_of_pages_median ?? null,
-    isbn: (book.isbn ?? [])[0] ?? null,
+    authors: parseAuthors(book.author),
+    cover_url: book.cover ?? null,
+    publisher: book.publisher ?? null,
+    first_publish_year: Number.isFinite(year) ? year : null,
+    subjects: categories.slice(0, 5),
+    pages: book.subInfo?.itemPage ?? null,
+    isbn: book.isbn13 ?? book.isbn ?? null,
   };
 }
 
 async function main() {
   const body = process.env.ISSUE_BODY ?? '';
   const issueNumber = parseInt(process.env.ISSUE_NUMBER ?? '0', 10);
-  const issueFallbackDate = (process.env.ISSUE_CREATED_AT ?? new Date().toISOString()).slice(0, 10);
+  const ttbKey = process.env.ALADIN_TTB_KEY;
 
   const parsed = parseIssueForm(body);
   console.log('[parse] Parsed sections:', JSON.stringify(parsed, null, 2));
@@ -69,7 +100,7 @@ async function main() {
 
   console.log(`[info] Processing book: "${userTitle}", rating: ${userRating}, finish: ${finishDate}`);
 
-  const ol = await fetchOpenLibraryData(userTitle);
+  const aladin = await fetchAladinBookData(userTitle, ttbKey);
 
   // Calculate reading duration in days
   let readingDays = null;
@@ -87,14 +118,17 @@ async function main() {
     finish_date: finishDate,
     reading_days: readingDays,
     added_at: new Date().toISOString(),
-    ol_key: ol?.ol_key ?? null,
-    title_normalized: ol?.title ?? userTitle,
-    authors: ol?.authors ?? [],
-    cover_id: ol?.cover_id ?? null,
-    first_publish_year: ol?.first_publish_year ?? null,
-    subjects: ol?.subjects ?? [],
-    pages: ol?.pages ?? null,
-    isbn: ol?.isbn ?? null,
+    aladin_item_id: aladin?.aladin_item_id ?? null,
+    title_normalized: aladin?.title ?? userTitle,
+    authors: aladin?.authors ?? [],
+    cover_url: aladin?.cover_url ?? null,
+    // Keep for backward compatibility with existing component/data shape.
+    cover_id: null,
+    publisher: aladin?.publisher ?? null,
+    first_publish_year: aladin?.first_publish_year ?? null,
+    subjects: aladin?.subjects ?? [],
+    pages: aladin?.pages ?? null,
+    isbn: aladin?.isbn ?? null,
   };
 
   const dataPath = resolve(process.cwd(), 'data', 'books.json');
