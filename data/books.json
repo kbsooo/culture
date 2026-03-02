@@ -1,5 +1,33 @@
 [
   {
+    "id": 37,
+    "user_title": "기계는 왜 학습하는가",
+    "rating": 10,
+    "review": "머신러닝 기초와 스토리를 쉽게 설명한 책",
+    "start_date": "2025-03-10",
+    "finish_date": "2025-03-31",
+    "reading_days": 21,
+    "added_at": "2026-03-02T06:03:33.756Z",
+    "aladin_item_id": 359017572,
+    "title_normalized": "기계는 왜 학습하는가 - AI를 움직이는 우아한 수학",
+    "authors": [
+      "아닐 아난타스와미",
+      "노승영"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/35901/75/cover200/8972918660_1.jpg",
+    "cover_id": null,
+    "publisher": "까치",
+    "first_publish_year": 2025,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "수학",
+      "쉽게 배우는 수학"
+    ],
+    "pages": null,
+    "isbn": "9788972918660"
+  },
+  {
     "id": 7,
     "user_title": "피타고라스 생각 수업",
     "rating": 8,
