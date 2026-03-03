@@ -1,9 +1,10 @@
 ---
-import { formatYyyyMmDd, parseYyyyMmDd } from '../lib/date';
+import { parseYyyyMmDd } from '../lib/date';
 
 interface Activity {
-  date: string;   // "YYYY-MM-DD"
-  count: number;
+  date: string;       // "YYYY-MM-DD"
+  movieCount: number;
+  bookCount: number;
 }
 interface Props {
   data: Activity[];
@@ -12,8 +13,10 @@ interface Props {
 const { data } = Astro.props;
 
 // Build a map for O(1) lookup
-const byDate: Record<string, number> = {};
-for (const { date, count } of data) byDate[date] = count;
+const byDate: Record<string, { movieCount: number; bookCount: number }> = {};
+for (const { date, movieCount, bookCount } of data) {
+  byDate[date] = { movieCount, bookCount };
+}
 
 // Build 53-week grid ending today
 const today = new Date();
@@ -24,20 +27,27 @@ const startDate = new Date(today);
 startDate.setDate(startDate.getDate() - 52 * 7 - startDate.getDay());
 
 // Build week columns
-const weeks: { iso: string; count: number }[][] = [];
+interface Cell {
+  iso: string;
+  movieCount: number;
+  bookCount: number;
+  isFuture: boolean;
+}
+const weeks: Cell[][] = [];
 let cursor = new Date(startDate);
 while (cursor <= today) {
-  const week: { iso: string; count: number }[] = [];
+  const week: Cell[] = [];
   for (let dow = 0; dow < 7; dow++) {
-    const iso = formatYyyyMmDd(cursor);
+    const iso = `${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}-${String(cursor.getDate()).padStart(2,'0')}`;
     const isFuture = cursor > today;
-    week.push({ iso, count: isFuture ? -1 : (byDate[iso] ?? 0) });
+    const entry = byDate[iso] ?? { movieCount: 0, bookCount: 0 };
+    week.push({ iso, movieCount: entry.movieCount, bookCount: entry.bookCount, isFuture });
     cursor.setDate(cursor.getDate() + 1);
   }
   weeks.push(week);
 }
 
-// Month labels: one per month, positioned at the week where it starts
+// Month labels
 const monthLabels: { label: string; col: number }[] = [];
 let lastMonth = -1;
 for (let w = 0; w < weeks.length; w++) {
@@ -50,6 +60,27 @@ for (let w = 0; w < weeks.length; w++) {
     monthLabels.push({ label: monthNames[m], col: w });
     lastMonth = m;
   }
+}
+
+// Compute cell CSS class + tooltip per cell
+function cellClass(cell: Cell): string {
+  if (cell.isFuture) return 'heatmap-cell future';
+  const { movieCount, bookCount } = cell;
+  if (movieCount === 0 && bookCount === 0) return 'heatmap-cell empty';
+
+  const type = movieCount > 0 && bookCount > 0 ? 'both'
+             : movieCount > 0 ? 'movie'
+             : 'book';
+  return `heatmap-cell ${type}`;
+}
+
+function cellTitle(cell: Cell): string {
+  if (cell.isFuture) return '';
+  const { iso, movieCount, bookCount } = cell;
+  const parts: string[] = [];
+  if (movieCount > 0) parts.push(`영화 ${movieCount}편`);
+  if (bookCount > 0) parts.push(`책 ${bookCount}건`);
+  return parts.length > 0 ? `${iso} — ${parts.join(', ')}` : iso;
 }
 ---
 
@@ -66,14 +97,24 @@ for (let w = 0; w < weeks.length; w++) {
   <div class="heatmap-grid" style={`grid-template-columns: repeat(${weeks.length}, 1fr);`}>
     {weeks.map(week => (
       <div class="heatmap-week">
-        {week.map(({ iso, count }) => (
-          <div
-            class={`heatmap-cell ${count < 0 ? 'future' : count === 0 ? 'empty' : count === 1 ? 'l1' : count === 2 ? 'l2' : count <= 4 ? 'l3' : 'l4'}`}
-            title={count >= 0 ? `${iso}${count > 0 ? ` — ${count}개` : ''}` : ''}
-          />
+        {week.map(cell => (
+          <div class={cellClass(cell)} title={cellTitle(cell)} />
         ))}
       </div>
     ))}
+  </div>
+
+  <!-- Legend -->
+  <div class="heatmap-legend">
+    <span class="legend-item">
+      <span class="legend-dot movie"></span>영화
+    </span>
+    <span class="legend-item">
+      <span class="legend-dot book"></span>책
+    </span>
+    <span class="legend-item">
+      <span class="legend-dot both"></span>둘 다
+    </span>
   </div>
 </div>
 
@@ -83,6 +124,7 @@ for (let w = 0; w < weeks.length; w++) {
     padding-bottom: 4px;
   }
 
+  /* ── 월 레이블 ── */
   .heatmap-months {
     display: grid;
     margin-bottom: 4px;
@@ -96,18 +138,17 @@ for (let w = 0; w < weeks.length; w++) {
     line-height: 1;
   }
 
+  /* ── 셀 그리드 ── */
   .heatmap-grid {
     display: grid;
     gap: 3px;
     min-width: max-content;
   }
-
   .heatmap-week {
     display: flex;
     flex-direction: column;
     gap: 3px;
   }
-
   .heatmap-cell {
     width: 12px;
     height: 12px;
@@ -115,20 +156,52 @@ for (let w = 0; w < weeks.length; w++) {
     flex-shrink: 0;
   }
 
-  /* Light mode */
-  .heatmap-cell.future  { background: transparent; }
-  .heatmap-cell.empty   { background: var(--border); }
-  .heatmap-cell.l1      { background: #c9933a44; }
-  .heatmap-cell.l2      { background: #c9933a88; }
-  .heatmap-cell.l3      { background: #c9933acc; }
-  .heatmap-cell.l4      { background: #c9933a; }
+  /* ── 공통 ── */
+  .heatmap-cell.future { background: transparent; }
+  .heatmap-cell.empty  { background: var(--border); }
 
-  /* Dark mode */
-  :global(html.dark) .heatmap-cell.empty { background: var(--border); }
-  :global(html.dark) .heatmap-cell.l1   { background: #5a3e10; }
-  :global(html.dark) .heatmap-cell.l2   { background: #8a5f1a; }
-  :global(html.dark) .heatmap-cell.l3   { background: #b8832a; }
-  :global(html.dark) .heatmap-cell.l4   { background: #d4a853; }
+  /* ── 영화 (Gold / Accent) ── */
+  .heatmap-cell.movie { background: #c9933a; }
+
+  /* ── 책 (Steel Blue) ── */
+  .heatmap-cell.book  { background: #5c84b0; }
+
+  /* ── 영화 + 책 (Soft Purple) ── */
+  .heatmap-cell.both  { background: #7b64b4; }
+
+  /* ── 다크 모드 ── */
+  :global(html.dark) .heatmap-cell.empty  { background: var(--border); }
+  :global(html.dark) .heatmap-cell.movie  { background: #d4a853; }
+  :global(html.dark) .heatmap-cell.book   { background: #5a90c8; }
+  :global(html.dark) .heatmap-cell.both   { background: #9070c8; }
+
+  /* ── 범례 ── */
+  .heatmap-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text-3);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .legend-dot.movie { background: #c9933a; }
+  .legend-dot.book  { background: #5c84b0; }
+  .legend-dot.both  { background: #7b64b4; }
+
+  :global(html.dark) .legend-dot.movie { background: #d4a853; }
+  :global(html.dark) .legend-dot.book  { background: #5a90c8; }
+  :global(html.dark) .legend-dot.both  { background: #9070c8; }
 
   @media (max-width: 640px) {
     .heatmap-cell { width: 10px; height: 10px; }

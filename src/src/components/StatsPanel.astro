@@ -31,7 +31,7 @@ const totalMovies = movies.length;
 const totalBooks  = books.length;
 ---
 
-<div class="mb-14 pb-10 grid grid-cols-1 sm:grid-cols-3 gap-4"
+<div class="mb-14 pb-10 grid grid-cols-3 gap-2 sm:gap-6"
      style="border-bottom: 1px solid var(--border)">
 
   <!-- This month -->
@@ -46,7 +46,7 @@ const totalBooks  = books.length;
   </div>
 
   <!-- This year -->
-  <div class="stat-cell sm:border-l sm:pl-8" style="border-color: var(--border);">
+  <div class="stat-cell border-l pl-3 sm:pl-8" style="border-color: var(--border);">
     <p class="label mb-2">올해</p>
     <p class="display-num">{moviesThisYear + booksThisYear}</p>
     <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
@@ -55,7 +55,7 @@ const totalBooks  = books.length;
   </div>
 
   <!-- Lifetime totals -->
-  <div class="stat-cell sm:border-l sm:pl-8" style="border-color: var(--border);">
+  <div class="stat-cell border-l pl-3 sm:pl-8" style="border-color: var(--border);">
     <p class="label mb-2">전체</p>
     <p class="display-num">{totalMovies + totalBooks}</p>
     <p class="text-xs font-mono mt-1" style="color: var(--text-3)">

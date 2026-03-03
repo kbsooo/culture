@@ -79,6 +79,7 @@ async function fetchAladinItemDetail(itemId, ttbKey) {
     url.searchParams.set('Cover', 'Big');
     url.searchParams.set('output', 'js');
     url.searchParams.set('Version', '20131101');
+    url.searchParams.set('OptResult', 'subInfo');
 
     const res = await fetch(url);
     if (!res.ok) {

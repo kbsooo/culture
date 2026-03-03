@@ -30,8 +30,85 @@ const avgPages = pageKnownBooks.length > 0
   ? Math.round(totalPages / pageKnownBooks.length)
   : null;
 const pageUnknownBooks = totalBooks - pageKnownBooks.length;
-const readingDaysKnownBooks = books.filter(b => Number.isFinite(b.reading_days) && (b.reading_days ?? 0) >= 0);
-const totalReadingDays = readingDaysKnownBooks.reduce((sum, b) => sum + (b.reading_days ?? 0), 0);
+
+// ─── 하이라이트 데이터 ──────────────────────────────────────────────────────
+
+// 가장 긴 영화
+const longestMovie = runtimeKnownMovies.length > 0
+  ? runtimeKnownMovies.reduce((best, m) => (m.runtime ?? 0) > (best.runtime ?? 0) ? m : best)
+  : null;
+function fmtRuntime(min: number) {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return h > 0 ? (m > 0 ? `${h}h ${m}m` : `${h}h`) : `${m}m`;
+}
+
+// 내 평점이 TMDB 평점보다 가장 많이 높은 영화 (편애)
+const tmdbMovies = movies.filter(m => m.tmdb_rating && Number.isFinite(m.tmdb_rating) && Number.isFinite(m.rating));
+const mostLovedMovie = tmdbMovies.length > 0
+  ? tmdbMovies.reduce((best, m) =>
+      (m.rating - (m.tmdb_rating ?? 0)) > (best.rating - (best.tmdb_rating ?? 0)) ? m : best
+    )
+  : null;
+const lovedDelta = mostLovedMovie
+  ? (mostLovedMovie.rating - (mostLovedMovie.tmdb_rating ?? 0)).toFixed(1)
+  : null;
+
+// 가장 두꺼운 책
+const thickestBook = pageKnownBooks.length > 0
+  ? pageKnownBooks.reduce((best, b) => (b.pages ?? 0) > (best.pages ?? 0) ? b : best)
+  : null;
+
+// ─── 페이지 기반 재미 통계 ──────────────────────────────────────────────────
+
+// 읽은 책을 쌓으면 몇 cm? (일반 책 1페이지 ≈ 0.1mm = 0.01cm)
+const PAGE_THICKNESS_MM = 0.1; // mm per page
+const stackHeightMm = totalPages * PAGE_THICKNESS_MM;
+const stackHeightCm = stackHeightMm / 10;
+
+// 해리포터 전 시리즈 비교 (국내판 기준 약 4,200p)
+const HP_SERIES_PAGES = 4200;
+const hpRatio = totalPages > 0 ? (totalPages / HP_SERIES_PAGES).toFixed(1) : null;
+
+// 비교 랜드마크 (mm 기준)
+const LANDMARKS = [
+  { name: '63빌딩', heightMm: 249_000 },
+  { name: 'N서울타워', heightMm: 236_000 },
+  { name: '롯데타워', heightMm: 555_000 },
+  { name: '에베레스트', heightMm: 8_849_000 },
+  { name: '한강 다리(마포대교)', heightMm: 1_400_000 },
+  { name: '성인 평균 키', heightMm: 1_720 },
+  { name: '아파트 1층', heightMm: 2_800 },
+  { name: '기린', heightMm: 5_500 },
+  { name: '전봇대', heightMm: 10_000 },
+  { name: '교실', heightMm: 2_700 },
+  { name: '남산', heightMm: 262_000 },
+] as const;
+
+type Landmark = { name: string; heightMm: number };
+const closestLandmark: Landmark | null = pageKnownBooks.length > 0
+  ? LANDMARKS.reduce((closest: Landmark, l: Landmark) =>
+      Math.abs(l.heightMm - stackHeightMm) < Math.abs(closest.heightMm - stackHeightMm) ? l : closest
+    )
+  : null;
+
+const landmarkRatioPct = closestLandmark
+  ? ((stackHeightMm / closestLandmark.heightMm) * 100).toFixed(1)
+  : null;
+
+// ─── TMDB 평점 성향 ─────────────────────────────────────────────────────────
+
+// 내 평점 평균 vs TMDB 평점 평균 차이 (전체)
+const ratingBias = tmdbMovies.length > 0
+  ? tmdbMovies.reduce((s, m) => s + (m.rating - (m.tmdb_rating ?? 0)), 0) / tmdbMovies.length
+  : 0;
+const higherThanTmdb = tmdbMovies.filter(m => m.rating > (m.tmdb_rating ?? 0)).length;
+const lowerThanTmdb = tmdbMovies.filter(m => m.rating < (m.tmdb_rating ?? 0)).length;
+const sameTmdb = tmdbMovies.filter(m => m.rating === (m.tmdb_rating ?? 0)).length;
+// 성향 레이블
+const biasLabel = ratingBias > 0.5 ? '관대한 편' : ratingBias < -0.5 ? '까다로운 편' : '평균적';
+
+// ─── 장르/주제 차트 ────────────────────────────────────────────────────────
 
 const movieGenreMap = new Map<string, number>();
 for (const movie of movies) {
@@ -57,8 +134,70 @@ const topBookSubjects = Array.from(bookSubjectMap.entries())
   .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
   .slice(0, 8);
 
+// ─── 평점 분포 ─────────────────────────────────────────────────────────────
+
+const movieRatingDist: [string, number][] = Array.from({length: 10}, (_, i) => {
+  const r = i + 1;
+  return [`★${r}`, movies.filter(m => m.rating === r).length] as [string, number];
+}).filter(([, c]) => c > 0);
+
+const bookRatingDist: [string, number][] = Array.from({length: 10}, (_, i) => {
+  const r = i + 1;
+  return [`★${r}`, books.filter(b => b.rating === r).length] as [string, number];
+}).filter(([, c]) => c > 0);
+
+// ─── 요일별 영화 시청 패턴 ──────────────────────────────────────────────────
+
+const weekdayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+const weekdayCounts = Array(7).fill(0) as number[];
+for (const m of movies) {
+  if (m.watched_date) {
+    const d = new Date(m.watched_date + 'T12:00:00');
+    weekdayCounts[d.getDay()]++;
+  }
+}
+const weekdayData: [string, number][] = weekdayLabels.map((label, i) => [label, weekdayCounts[i]]);
+const hasWeekdayData = weekdayCounts.some(c => c > 0);
+
+// ─── 영화 개봉 연도 분포 ────────────────────────────────────────────────────
+
+const movieYearMap = new Map<string, number>();
+for (const m of movies) {
+  const year = m.release_date?.slice(0, 4);
+  if (year && /^\d{4}$/.test(year)) {
+    movieYearMap.set(year, (movieYearMap.get(year) ?? 0) + 1);
+  }
+}
+const movieYearDist: [string, number][] = Array.from(movieYearMap.entries())
+  .sort((a, b) => a[0].localeCompare(b[0]));
+const hasMovieYearData = movieYearDist.length > 0;
+
+// ─── 책 출판 연도 구간 분포 ─────────────────────────────────────────────────
+
+const bookYearBands: [string, (y: number) => boolean][] = [
+  ['~2015',  (y) => y <= 2015],
+  ['2016-19',(y) => y >= 2016 && y <= 2019],
+  ['2020-21',(y) => y >= 2020 && y <= 2021],
+  ['2022',   (y) => y === 2022],
+  ['2023',   (y) => y === 2023],
+  ['2024',   (y) => y === 2024],
+  ['2025+',  (y) => y >= 2025],
+];
+const bookYearDist: [string, number][] = bookYearBands
+  .map(([label, fn]) => [
+    label,
+    books.filter(b => b.first_publish_year && fn(b.first_publish_year)).length
+  ] as [string, number])
+  .filter(([, c]) => c > 0);
+const hasBookYearData = bookYearDist.length > 0;
+
+// ─── 월별 활동 (스택드: 영화 + 책) ────────────────────────────────────────
+
 const now = new Date();
-const monthlyRows = [];
+const monthlyRows: {
+  key: string; label: string;
+  total: number; movieCount: number; bookCount: number;
+}[] = [];
 for (let i = 11; i >= 0; i--) {
   const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
   const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -90,7 +229,83 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     </p>
   </div>
 
-  <section class="mb-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+  <!-- ── 하이라이트 카드 (Spotify Wrapped 스타일) ──────────────────────────── -->
+  {(pageKnownBooks.length > 0 || longestMovie || mostLovedMovie || thickestBook) && (
+    <section class="mb-10">
+      <p class="label mb-4">하이라이트</p>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+        {/* BOOK TOWER */}
+        {pageKnownBooks.length > 0 && stackHeightCm > 0 && (
+          <div class="stat-box highlight-card">
+            <p class="label mb-2 text-[10px]" style="color: var(--accent)">BOOK TOWER</p>
+            <p class="display-num" style="font-size: 1.75rem;">
+              {stackHeightCm >= 100
+                ? `${(stackHeightCm / 100).toFixed(2)}m`
+                : `${stackHeightCm.toFixed(1)}cm`}
+            </p>
+            <p class="text-xs font-mono mt-1" style="color: var(--text-3)">읽은 책을 쌓은 높이</p>
+            {closestLandmark && landmarkRatioPct && (
+              <p class="text-[11px] font-mono mt-2" style="color: var(--text-2)">
+                {closestLandmark.name}의 {landmarkRatioPct}%
+              </p>
+            )}
+            {hpRatio && (
+              <p class="text-[11px] font-mono mt-0.5" style="color: var(--text-3)">
+                해리포터 시리즈의 {hpRatio}배
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* THICKEST BOOK */}
+        {thickestBook && (
+          <div class="stat-box highlight-card">
+            <p class="label mb-2 text-[10px]" style="color: var(--accent)">THICKEST BOOK</p>
+            <p class="display-num" style="font-size: 1.75rem;">{thickestBook.pages!.toLocaleString('ko-KR')}p</p>
+            <p class="text-xs font-mono mt-1" style="color: var(--text-3)">가장 두꺼운 책</p>
+            <p class="text-xs mt-2 line-clamp-1 font-medium" style="color: var(--text-2)">
+              {(thickestBook as any).user_title || (thickestBook as any).title_normalized}
+            </p>
+          </div>
+        )}
+
+        {/* LONGEST WATCH */}
+        {longestMovie && (
+          <div class="stat-box highlight-card">
+            <p class="label mb-2 text-[10px]" style="color: var(--accent)">LONGEST WATCH</p>
+            <p class="display-num" style="font-size: 1.75rem;">{fmtRuntime(longestMovie.runtime!)}</p>
+            <p class="text-xs font-mono mt-1" style="color: var(--text-3)">러닝타임</p>
+            <p class="text-xs mt-2 line-clamp-1 font-medium" style="color: var(--text-2)">
+              {longestMovie.title_ko || longestMovie.user_title}
+            </p>
+            <p class="text-[11px] font-mono mt-0.5" style="color: var(--text-3)">
+              {longestMovie.runtime}분
+            </p>
+          </div>
+        )}
+
+        {/* MY PICK */}
+        {mostLovedMovie && lovedDelta && Number(lovedDelta) > 0 && (
+          <div class="stat-box highlight-card">
+            <p class="label mb-2 text-[10px]" style="color: var(--accent)">MY PICK</p>
+            <p class="display-num" style="font-size: 1.75rem;">+{lovedDelta}</p>
+            <p class="text-xs font-mono mt-1" style="color: var(--text-3)">TMDB 대비 내 평점</p>
+            <p class="text-xs mt-2 line-clamp-1 font-medium" style="color: var(--text-2)">
+              {mostLovedMovie.title_ko || mostLovedMovie.user_title}
+            </p>
+            <p class="text-[11px] font-mono mt-0.5" style="color: var(--text-3)">
+              내 ★{mostLovedMovie.rating} · TMDB {(mostLovedMovie.tmdb_rating ?? 0).toFixed(1)}
+            </p>
+          </div>
+        )}
+
+      </div>
+    </section>
+  )}
+
+  <!-- ── 기본 수치 박스 ──────────────────────────────────────────────────────── -->
+  <section class="mb-14 grid gap-4 sm:grid-cols-3">
     <div class="stat-box">
       <p class="label mb-2">영화 시청 시간</p>
       <p class="display-num">{totalRuntimeHour.toFixed(1)}h</p>
@@ -118,22 +333,67 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     </div>
 
     <div class="stat-box">
-      <p class="label mb-2">독서 기간</p>
-      <p class="display-num">{totalReadingDays.toLocaleString('ko-KR')}d</p>
-      <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
-        일수 기록된 책 {readingDaysKnownBooks.length}권
-      </p>
-    </div>
-
-    <div class="stat-box">
       <p class="label mb-2">콘텐츠 수</p>
       <p class="display-num">{(totalMovies + totalBooks).toLocaleString('ko-KR')}</p>
       <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
         영화 {totalMovies} · 책 {totalBooks}
       </p>
+      {tmdbMovies.length > 0 && (
+        <p class="text-[11px] mt-1" style="color: var(--text-3)">
+          평점 성향: {biasLabel} ({ratingBias > 0 ? '+' : ''}{ratingBias.toFixed(1)} vs TMDB)
+        </p>
+      )}
     </div>
   </section>
 
+  <!-- ── 평점 분포 ───────────────────────────────────────────────────────────── -->
+  {(movieRatingDist.length > 0 || bookRatingDist.length > 0) && (
+    <section class="mb-14 grid gap-8 lg:grid-cols-2">
+      {movieRatingDist.length > 0 && (
+        <div class="stat-box">
+          <div class="flex items-baseline justify-between gap-2 mb-4">
+            <p class="label">영화 평점 분포</p>
+            <a href={`${base}/movies/`} class="text-xs font-mono" style="color: var(--text-3)">영화 목록 →</a>
+          </div>
+          <GenreChart data={movieRatingDist} />
+          {tmdbMovies.length > 0 && (
+            <p class="text-[11px] font-mono mt-3" style="color: var(--text-3)">
+              TMDB보다 높게: {higherThanTmdb}편 · 낮게: {lowerThanTmdb}편 · 동일: {sameTmdb}편
+            </p>
+          )}
+        </div>
+      )}
+      {bookRatingDist.length > 0 && (
+        <div class="stat-box">
+          <div class="flex items-baseline justify-between gap-2 mb-4">
+            <p class="label">책 평점 분포</p>
+            <a href={`${base}/books/`} class="text-xs font-mono" style="color: var(--text-3)">책 목록 →</a>
+          </div>
+          <GenreChart data={bookRatingDist} />
+        </div>
+      )}
+    </section>
+  )}
+
+  <!-- ── 개봉/출판 연도 분포 ─────────────────────────────────────────────────── -->
+  {(hasMovieYearData || hasBookYearData) && (
+    <section class="mb-14 grid gap-8 lg:grid-cols-2">
+      {hasMovieYearData && (
+        <div class="stat-box">
+          <p class="label mb-4">시청 영화 개봉 연도</p>
+          <GenreChart data={movieYearDist} />
+        </div>
+      )}
+      {hasBookYearData && (
+        <div class="stat-box">
+          <p class="label mb-4">읽은 책 출판 연도</p>
+          <GenreChart data={bookYearDist} />
+        </div>
+      )}
+    </section>
+  )}
+
+  <!-- ── 장르 / 주제 차트 ──────────────────────────────────────────────────── -->
   <section class="mb-14 grid gap-8 lg:grid-cols-2">
     <div class="stat-box">
       <div class="flex items-baseline justify-between gap-2 mb-4">
@@ -160,25 +420,61 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     </div>
   </section>
 
+  <!-- ── 요일별 영화 시청 패턴 ────────────────────────────────────────────── -->
+  {hasWeekdayData && (
+    <section class="mb-14">
+      <div class="stat-box">
+        <p class="label mb-4">요일별 영화 시청</p>
+        <GenreChart data={weekdayData} />
+        <p class="text-xs font-mono mt-3" style="color: var(--text-3)">
+          시청일 기준 (날짜 미상 제외)
+        </p>
+      </div>
+    </section>
+  )}
+
+  <!-- ── 월별 활동 (스택드 바) ─────────────────────────────────────────────── -->
   <section class="stat-box">
     <p class="label mb-4">최근 12개월 활동</p>
     <div class="space-y-2.5">
-      {monthlyRows.map(row => (
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-mono w-12 shrink-0" style="color: var(--text-3)">{row.label}</span>
-          <div class="flex-1 h-2 rounded-full overflow-hidden" style="background: var(--border);">
-            <div class="h-full rounded-full"
-                 style={`width:${(row.total / maxMonthlyTotal * 100).toFixed(1)}%; background: var(--accent);`} />
+      {monthlyRows.map(row => {
+        const moviePct = (row.movieCount / maxMonthlyTotal * 100).toFixed(1);
+        const bookPct  = (row.bookCount  / maxMonthlyTotal * 100).toFixed(1);
+        return (
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-mono w-12 shrink-0" style="color: var(--text-3)">{row.label}</span>
+            <div class="flex-1 h-2 rounded-full overflow-hidden flex" style="background: var(--border);">
+              {/* 책 (앞쪽, 옅은 gold) */}
+              {row.bookCount > 0 && (
+                <div class="h-full"
+                     style={`width:${bookPct}%; background: var(--accent); opacity: 0.45;`} />
+              )}
+              {/* 영화 (뒤쪽, 진한 gold) */}
+              {row.movieCount > 0 && (
+                <div class="h-full"
+                     style={`width:${moviePct}%; background: var(--accent);`} />
+              )}
+            </div>
+            <span class="text-xs font-mono w-20 text-right shrink-0" style="color: var(--text-2)">
+              {row.movieCount > 0 && <span>{row.movieCount}편</span>}
+              {row.movieCount > 0 && row.bookCount > 0 && <span style="color: var(--text-3)"> · </span>}
+              {row.bookCount > 0 && <span style="opacity: 0.7">{row.bookCount}권</span>}
+              {row.total === 0 && <span style="color: var(--text-3)">—</span>}
+            </span>
           </div>
-          <span class="text-xs font-mono w-16 text-right shrink-0" style="color: var(--text-2)">
-            {row.total}개
-          </span>
-        </div>
-      ))}
+        );
+      })}
     </div>
-    <p class="text-xs font-mono mt-4" style="color: var(--text-3)">
-      영화/책 완료일 기준 합산입니다.
-    </p>
+    <div class="flex items-center gap-4 mt-4 text-[11px] font-mono" style="color: var(--text-3)">
+      <span class="flex items-center gap-1.5">
+        <span class="inline-block w-3 h-1.5 rounded-full" style="background: var(--accent);"></span>
+        영화
+      </span>
+      <span class="flex items-center gap-1.5">
+        <span class="inline-block w-3 h-1.5 rounded-full" style="background: var(--accent); opacity: 0.45;"></span>
+        책
+      </span>
+    </div>
   </section>
 </BaseLayout>
 
@@ -188,5 +484,22 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
     background: var(--surface);
     border-radius: 8px;
     padding: 1rem;
+  }
+
+  .highlight-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 하이라이트 카드 상단 accent 라인 */
+  .highlight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.6;
   }
 </style>

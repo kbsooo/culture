@@ -36,13 +36,22 @@ function fmtDate(d: string | null | undefined) {
     year: 'numeric', month: 'numeric', day: 'numeric',
   });
 }
-
 const finishStr = fmtDate(book.finish_date);
+
+// 저자: 첫 저자 + "외 N명"
+const authorDisplay = (() => {
+  const authors = book.authors ?? [];
+  if (authors.length === 0) return null;
+  if (authors.length === 1) return authors[0];
+  return `${authors[0]} 외 ${authors.length - 1}명`;
+})();
+
+const pagesStr = book.pages ? `${book.pages.toLocaleString('ko-KR')}p` : null;
 ---
 
 <article class="group cursor-default" style="color: var(--text-1)">
   <!-- Cover -->
-  <div class="aspect-[3/4] sm:aspect-[2/3] overflow-hidden rounded-sm mb-3"
+  <div class="relative aspect-[2/3] overflow-hidden rounded-sm mb-3"
        style="background: var(--border);">
     <img
       src={coverUrl}
@@ -60,24 +69,23 @@ const finishStr = fmtDate(book.finish_date);
       {displayTitle}
     </h3>
 
-    {book.authors && book.authors.length > 0 && (
-      <p class="text-[11px] truncate" style="color: var(--text-2)">
-        {book.authors.join(', ')}
-      </p>
+    {authorDisplay && (
+      <p class="text-[11px] truncate" style="color: var(--text-2)">{authorDisplay}</p>
     )}
 
     <div class="flex items-center justify-between gap-2">
       {finishStr
-        ? <span class="text-[11px] font-mono" style="color: var(--text-3)">
-            {finishStr}
-            {book.reading_days && ` · ${book.reading_days}일`}
-          </span>
+        ? <span class="text-[11px] font-mono" style="color: var(--text-3)">{finishStr}</span>
         : <span class="text-[11px] font-mono" style="color: var(--text-3)">날짜 미상</span>
       }
       <span class="text-[11px] font-mono shrink-0" style="color: var(--accent)">
         ★ {book.rating}
       </span>
     </div>
+
+    {pagesStr && (
+      <p class="text-[11px] font-mono" style="color: var(--text-3)">{pagesStr}</p>
+    )}
 
     {book.review && (
       <p class="text-[11px] leading-relaxed line-clamp-2 pt-0.5" style="color: var(--text-2)">
