@@ -16,7 +16,7 @@ const currentPath = Astro.url.pathname;
 
 <nav style="background: var(--bg); border-bottom: 1px solid var(--border);"
      class="sticky top-0 z-50 backdrop-blur-sm">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 h-12 flex items-center justify-between gap-6">
+  <div class="max-w-6xl mx-auto px-3 sm:px-8 lg:px-10 h-12 flex items-center justify-between gap-2 sm:gap-6">
 
     <!-- Brand -->
     <a href={`${base}/`} class="font-semibold text-sm tracking-tight shrink-0"
@@ -32,7 +32,7 @@ const currentPath = Astro.url.pathname;
         return (
           <a
             href={link.href}
-            class="px-3 py-1.5 rounded-md text-sm transition-colors"
+            class="px-2 sm:px-3 py-1.5 rounded-md text-sm transition-colors"
             style={isActive
               ? `color: var(--accent); font-weight: 600;`
               : `color: var(--text-2);`}
