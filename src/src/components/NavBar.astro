@@ -41,6 +41,23 @@ const currentPath = Astro.url.pathname;
           </a>
         );
       })}
+
+      <!-- Divider -->
+      <span class="mx-1" style="color: var(--border);">|</span>
+
+      <!-- Blog external link -->
+      <a
+        href="https://kbsooo.github.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-3 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1"
+        style="color: var(--text-3);"
+      >
+        블로그
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="opacity:0.5;">
+          <path d="M1.5 8.5L8.5 1.5M8.5 1.5H4M8.5 1.5V6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
     </div>
 
     <ThemeToggle />

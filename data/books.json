@@ -40,7 +40,7 @@
     "aladin_item_id": null,
     "title_normalized": "The Alignment Problem",
     "authors": [],
-    "cover_url": null,
+    "cover_url": "https://books.google.com/books/content?id=KGCNEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
     "cover_id": null,
     "publisher": null,
     "first_publish_year": null,
@@ -144,14 +144,17 @@
     "added_at": "2026-03-02T06:30:16.137Z",
     "aladin_item_id": null,
     "title_normalized": "The Technological Republic",
-    "authors": [],
-    "cover_url": null,
+    "authors": [
+      "Alexander C. Karp",
+      "Nicholas W. Zamiska"
+    ],
+    "cover_url": "https://books.google.com/books/content?id=SPkIEQAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
     "cover_id": null,
     "publisher": null,
-    "first_publish_year": null,
+    "first_publish_year": 2025,
     "subjects": [],
     "pages": null,
-    "isbn": null,
+    "isbn": "9780593798706",
     "ol_key": null
   },
   {
@@ -402,7 +405,7 @@
       "수학",
       "쉽게 배우는 수학"
     ],
-    "pages": null,
+    "pages": 360,
     "isbn": "9788901165813"
   },
   {
@@ -515,7 +518,7 @@
       "컴퓨터 공학",
       "소프트웨어 공학"
     ],
-    "pages": null,
+    "pages": 328,
     "isbn": "9791140700288",
     "ol_key": null
   },
@@ -544,7 +547,7 @@
       "세계의 소설",
       "동유럽소설"
     ],
-    "pages": null,
+    "pages": 520,
     "isbn": "9788937437564",
     "ol_key": null
   },
@@ -744,7 +747,7 @@
       "심리학/정신분석학",
       "교양 심리학"
     ],
-    "pages": null,
+    "pages": 544,
     "isbn": "9788958270096"
   },
   {
@@ -771,7 +774,7 @@
       "성공",
       "성공학"
     ],
-    "pages": null,
+    "pages": 308,
     "isbn": "9791162542040"
   },
   {
@@ -825,7 +828,7 @@
       "자기계발",
       "창의적사고/두뇌계발"
     ],
-    "pages": null,
+    "pages": 333,
     "isbn": "9791162540633"
   },
   {
@@ -853,7 +856,7 @@
       "트렌드/미래전망",
       "트렌드/미래전망 일반"
     ],
-    "pages": null,
+    "pages": 336,
     "isbn": "9788991945753"
   },
   {
@@ -880,7 +883,7 @@
       "재테크/투자",
       "재테크/투자 일반"
     ],
-    "pages": null,
+    "pages": 316,
     "isbn": "9788925578354"
   },
   {
@@ -907,7 +910,7 @@
       "경제학/경제일반",
       "화폐/금융/재정"
     ],
-    "pages": null,
+    "pages": 276,
     "isbn": "9791191393163"
   },
   {
@@ -962,7 +965,7 @@
       "성공",
       "성공학"
     ],
-    "pages": null,
+    "pages": 300,
     "isbn": "9791168340213"
   },
   {
@@ -1072,7 +1075,7 @@
       "판타지/환상문학",
       "한국판타지/환상소설"
     ],
-    "pages": null,
+    "pages": 300,
     "isbn": "9791165341909"
   },
   {
@@ -1099,7 +1102,7 @@
       "판타지/환상문학",
       "한국판타지/환상소설"
     ],
-    "pages": null,
+    "pages": 308,
     "isbn": "9791165343729"
   },
   {
@@ -1125,7 +1128,7 @@
       "에세이",
       "한국에세이"
     ],
-    "pages": null,
+    "pages": 272,
     "isbn": "9788954677257"
   },
   {

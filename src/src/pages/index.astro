@@ -5,31 +5,31 @@ import StatsPanel from '../components/StatsPanel.astro';
 import HeatmapCalendar from '../components/HeatmapCalendar.astro';
 import MovieCard from '../components/MovieCard.astro';
 import BookCard from '../components/BookCard.astro';
-import { formatYyyyMmDd, parseYyyyMmDd } from '../lib/date';
 
 import moviesRaw from '../../../data/movies.json';
 import booksRaw from '../../../data/books.json';
 
-// Heatmap: movies by watched_date, books by full reading span
-const activityMap = new Map<string, number>();
+// Heatmap: movies by watched_date, books by start_date + finish_date events only
+interface ActivityEntry { movieCount: number; bookCount: number; }
+const activityMap = new Map<string, ActivityEntry>();
+const getOrCreate = (date: string): ActivityEntry => {
+  if (!activityMap.has(date)) activityMap.set(date, { movieCount: 0, bookCount: 0 });
+  return activityMap.get(date)!;
+};
 
 for (const m of moviesRaw) {
   if (!m.watched_date) continue;
-  activityMap.set(m.watched_date, (activityMap.get(m.watched_date) ?? 0) + 1);
+  getOrCreate(m.watched_date).movieCount++;
 }
 for (const b of booksRaw) {
-  if (!b.finish_date) continue;
-  const start = parseYyyyMmDd(b.start_date) ?? parseYyyyMmDd(b.finish_date);
-  const end = parseYyyyMmDd(b.finish_date);
-  if (!start || !end) continue;
-  const cursor = new Date(start);
-  while (cursor <= end) {
-    const d = formatYyyyMmDd(cursor);
-    activityMap.set(d, (activityMap.get(d) ?? 0) + 1);
-    cursor.setDate(cursor.getDate() + 1);
-  }
+  // 시작일 (책 산 날 / 읽기 시작한 날)
+  if (b.start_date) getOrCreate(b.start_date).bookCount++;
+  // 완독일 — start_date와 같은 날이어도 별도 이벤트로 카운트
+  if (b.finish_date) getOrCreate(b.finish_date).bookCount++;
 }
-let activityData = Array.from(activityMap.entries()).map(([date, count]) => ({ date, count }));
+const activityData = Array.from(activityMap.entries()).map(([date, { movieCount, bookCount }]) => ({
+  date, movieCount, bookCount,
+}));
 
 // Sort recent movies/books — dated first
 const recentMovies = [...moviesRaw]
