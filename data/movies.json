@@ -196,6 +196,28 @@
     "tmdb_rating": 6.274
   },
   {
+    "id": 76,
+    "user_title": "War Machine",
+    "rating": 9,
+    "review": "연기연출 좋음.\n외계인 너무 별거없음\n잔인함.",
+    "watched_date": "2025-03-12",
+    "added_at": "2026-03-15T13:32:48.632Z",
+    "tmdb_id": 1265609,
+    "title_ko": "워 머신: 전쟁 기계",
+    "title_original": "War Machine",
+    "poster_path": "/cfeIYPthWgq5XFZnx7cbpr7xFTp.jpg",
+    "backdrop_path": "/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
+    "release_date": "2026-02-12",
+    "genres": [
+      "액션",
+      "SF",
+      "스릴러"
+    ],
+    "runtime": 110,
+    "overview": "미 육군 레인저 훈련에서 마지막 혹독한 임무를 받은 전투 공병. 자신이 속한 부대를 이끌고 거대한 외계 살상 병기에 맞서 싸워야 한다.",
+    "tmdb_rating": 7.196
+  },
+  {
     "id": 66,
     "user_title": "캡틴 아메리카: 브레이브 뉴 월드",
     "rating": 6,
