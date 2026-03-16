@@ -1,5 +1,27 @@
 [
   {
+    "id": 76,
+    "user_title": "워 머신: 전쟁 기계",
+    "rating": 9,
+    "review": "연기연출 좋음.\n외계인 너무 별거없음\n잔인함.",
+    "watched_date": "2026-03-12",
+    "added_at": "2026-03-16T01:30:09.142Z",
+    "tmdb_id": 1265609,
+    "title_ko": "워 머신: 전쟁 기계",
+    "title_original": "War Machine",
+    "poster_path": "/cfeIYPthWgq5XFZnx7cbpr7xFTp.jpg",
+    "backdrop_path": "/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
+    "release_date": "2026-02-12",
+    "genres": [
+      "액션",
+      "SF",
+      "스릴러"
+    ],
+    "runtime": 110,
+    "overview": "미 육군 레인저 훈련에서 마지막 혹독한 임무를 받은 전투 공병. 자신이 속한 부대를 이끌고 거대한 외계 살상 병기에 맞서 싸워야 한다.",
+    "tmdb_rating": 7.207
+  },
+  {
     "id": 3,
     "user_title": "왕과 사는 남자",
     "rating": 6,
@@ -194,28 +216,6 @@
     "runtime": 101,
     "overview": "왕년의 게임 챔피언이었지만 지금은 폐업 직전의 게임샵 주인이 된 '개릿'과 엄마를 잃고 낯선 동네로 이사 온 남매 '헨리'와 '나탈리' 그리고 그들을 돕는 부동산 중개업자 '던'. 이들은 ‘개릿’이 수집한 ‘큐브’가 내뿜는 신비한 빛을 따라가다 어느 폐광 속에 열린 포털을 통해 미지의 공간으로 빨려들어간다. 산과 나무, 구름과 달, 심지어 꿀벌까지 상상하는 모든 것이 네모난 현실이 되는 이곳은 바로 ‘오버월드’. 일찍이 이 세계로 넘어와 완벽하게 적응한 ‘스티브’를 만난 네 사람은 지하세계 ‘네더’를 다스리는 마법사 ‘말고샤’의 침공으로 ‘오버월드’가 위험에 빠졌다는 사실을 알게 된다. 현실 세계로 돌아가기 위해서는 일단 살아남아야 하는 법! 다섯 명의 ‘동글이’들은 ‘오버월드’를 구하기 위해 힘을 합치게 되는데…",
     "tmdb_rating": 6.274
-  },
-  {
-    "id": 76,
-    "user_title": "워 머신: 전쟁 기계",
-    "rating": 9,
-    "review": "연기연출 좋음.\n외계인 너무 별거없음\n잔인함.",
-    "watched_date": "2025-03-12",
-    "added_at": "2026-03-16T00:54:42.057Z",
-    "tmdb_id": 1265609,
-    "title_ko": "워 머신: 전쟁 기계",
-    "title_original": "War Machine",
-    "poster_path": "/cfeIYPthWgq5XFZnx7cbpr7xFTp.jpg",
-    "backdrop_path": "/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
-    "release_date": "2026-02-12",
-    "genres": [
-      "액션",
-      "SF",
-      "스릴러"
-    ],
-    "runtime": 110,
-    "overview": "미 육군 레인저 훈련에서 마지막 혹독한 임무를 받은 전투 공병. 자신이 속한 부대를 이끌고 거대한 외계 살상 병기에 맞서 싸워야 한다.",
-    "tmdb_rating": 7.207
   },
   {
     "id": 66,
