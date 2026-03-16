@@ -7,6 +7,7 @@ on:
 permissions:
   contents: write
   issues: read
+  actions: write
 
 concurrency:
   group: process-issue-main
@@ -52,14 +53,29 @@ jobs:
         run: node scripts/process-book.mjs
 
       - name: Commit updated data files
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/movies.json data/books.json
           if git diff --cached --quiet; then
             echo "No data changes to commit."
+            echo "data_changed=false" >> $GITHUB_OUTPUT
             exit 0
           fi
           git commit -m "chore: add entry from issue #${{ github.event.issue.number }}"
           git pull --rebase origin main
           git push origin HEAD:main
+          echo "data_changed=true" >> $GITHUB_OUTPUT
+
+      - name: Trigger deploy
+        if: steps.commit.outputs.data_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: 'main',
+            });
