@@ -1,5 +1,35 @@
 [
   {
+    "id": 45,
+    "user_title": "부분과 전체",
+    "rating": 8,
+    "review": "과학사 이해가 없는 상태로는 쉽지 않을 수도 있음.\n오펜하이머의 배경인 맨해튼 프로젝트의 반대편 독일의 이야기 (그 중 하이젠베르크)",
+    "start_date": "2026-02-24",
+    "finish_date": "2026-03-16",
+    "reading_days": 20,
+    "added_at": "2026-03-16T13:17:40.736Z",
+    "aladin_item_id": 318172944,
+    "google_volume_id": null,
+    "title_normalized": "부분과 전체 - 개정증보판",
+    "authors": [
+      "베르너 하이젠베르크",
+      "유영미",
+      "김재영"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/31817/29/cover200/k362833412_1.jpg",
+    "cover_id": null,
+    "publisher": "서커스(서커스출판상회)",
+    "first_publish_year": 2023,
+    "subjects": [
+      "국내도서",
+      "과학",
+      "과학의 이해",
+      "과학고전"
+    ],
+    "pages": 504,
+    "isbn": "9791187295686"
+  },
+  {
     "id": 44,
     "user_title": "시대예보: 경량문명의 탄생",
     "rating": 7,
