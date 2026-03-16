@@ -440,6 +440,27 @@
     "tmdb_rating": 8.6
   },
   {
+    "id": 79,
+    "user_title": "오펜하이머",
+    "rating": 8,
+    "review": "맨해튼 프로젝트 이런거 역사 내용 잘 모르면 애매할수도.\n근데 음향 영상 이런거 레전드긴 함.\nIMAX로 꼭 봐야하는 영화.",
+    "watched_date": "2023-08-15",
+    "added_at": "2026-03-16T01:35:10.941Z",
+    "tmdb_id": 872585,
+    "title_ko": "오펜하이머",
+    "title_original": "Oppenheimer",
+    "poster_path": "/jpD6z9fgNe7OqsHoDeAWQWoULde.jpg",
+    "backdrop_path": "/ycnO0cjsAROSGJKuMODgRtWsHQw.jpg",
+    "release_date": "2023-07-19",
+    "genres": [
+      "드라마",
+      "역사"
+    ],
+    "runtime": 181,
+    "overview": "세상을 구하기 위해 세상을 파괴할 지도 모르는 선택을 해야 하는 천재 과학자의 핵개발 프로젝트.",
+    "tmdb_rating": 8.033
+  },
+  {
     "id": 58,
     "user_title": "아바타 - 물의 길",
     "rating": 5,
