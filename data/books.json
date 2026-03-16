@@ -134,6 +134,33 @@
     "isbn": "9791155818442"
   },
   {
+    "id": 80,
+    "user_title": "흰 고래의 흼에 대하여",
+    "rating": 9,
+    "review": "번역에 대해 생각해볼 수 있는 좋은 책.",
+    "start_date": "2025-06-20",
+    "finish_date": "2025-07-12",
+    "reading_days": 22,
+    "added_at": "2026-03-16T13:10:28.799Z",
+    "aladin_item_id": 358334909,
+    "google_volume_id": null,
+    "title_normalized": "흰 고래의 흼에 대하여",
+    "authors": [
+      "홍한별"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/35833/49/cover200/k802037766_1.jpg",
+    "cover_id": null,
+    "publisher": "위고",
+    "first_publish_year": 2025,
+    "subjects": [
+      "국내도서",
+      "인문학",
+      "인문 에세이"
+    ],
+    "pages": 272,
+    "isbn": "9791193044230"
+  },
+  {
     "id": 38,
     "user_title": "The Technological Republic",
     "rating": 7,
