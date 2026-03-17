@@ -1,5 +1,27 @@
 [
   {
+    "id": 81,
+    "user_title": "One Battle After Another",
+    "rating": 7,
+    "review": "2026 오스카 6관왕.\n늦게나마 봄.\n표현하고자 하는게 엄청 많음.\n미국의 역사, 문화, 내부 상황 등에 대해서 잘 안다면 볼만함.",
+    "watched_date": "2026-03-17",
+    "added_at": "2026-03-17T11:38:40.557Z",
+    "tmdb_id": 1054867,
+    "title_ko": "원 배틀 애프터 어나더",
+    "title_original": "One Battle After Another",
+    "poster_path": "/bCg9iDSXPjVTUs1RyYH8AhmJ11d.jpg",
+    "backdrop_path": "/zpEWFNqoN8Qg1SzMMHmaGyOBTdW.jpg",
+    "release_date": "2025-09-23",
+    "genres": [
+      "스릴러",
+      "범죄",
+      "코미디"
+    ],
+    "runtime": 162,
+    "overview": "자유를 외치는 혁명가 밥 퍼거슨. 16년이 흐른 뒤, 후유증으로 모든 걸 내려놓고 무너진 삶을 살고 있다. 그에게 남은 유일한 희망은 세상 누구보다 소중한 딸 윌라뿐. 자신의 몸도, 딸과의 관계도 엉망진창인 삶을 살아가던 중 과거의 숙적이었던 스티븐 J. 록조가 딸을 납치한다. 딸을 찾기 위해서 옛 동료들의 도움이 절실하지만, 오래된 동료들은 만나기조차 쉽지 않은데…",
+    "tmdb_rating": 7.398
+  },
+  {
     "id": 76,
     "user_title": "워 머신: 전쟁 기계",
     "rating": 9,
