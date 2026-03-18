@@ -22,7 +22,7 @@ const rows: Row[] = [
     rating:   m.rating,
     review:   m.review || null,
     date:     m.watched_date || null,
-    duration: m.runtime ? `${m.runtime}분` : null,
+    duration: m.runtime ? `${m.runtime}min` : null,
   })),
   ...booksRaw.map(b => ({
     type: 'book' as const,
@@ -31,11 +31,10 @@ const rows: Row[] = [
     rating:   b.rating,
     review:   b.review || null,
     date:     b.finish_date || null,
-    duration: b.reading_days ? `${b.reading_days}일` : null,
+    duration: b.reading_days ? `${b.reading_days}d` : null,
   })),
 ];
 
-// Sort: dated first (desc), then undated alphabetically
 rows.sort((a, b) => {
   if (!a.date && !b.date) return a.title.localeCompare(b.title);
   if (!a.date) return 1;
@@ -45,120 +44,64 @@ rows.sort((a, b) => {
 
 function fmtDate(d: string | null) {
   if (!d) return null;
-  return new Date(d + 'T12:00:00').toLocaleDateString('ko-KR', {
-    year: 'numeric', month: '2-digit', day: '2-digit',
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', {
+    year: 'numeric', month: 'short', day: 'numeric',
   });
 }
 ---
 
-<BaseLayout title="기록">
+<BaseLayout title="Records" pageClass="page--records">
   <NavBar slot="nav" />
 
-  <!-- Header -->
-  <div class="mb-10 flex items-end justify-between gap-6 flex-wrap">
-    <div>
-      <p class="label mb-3">전체 목록</p>
-      <h1 class="text-4xl font-bold tracking-tight" style="color: var(--text-1)">기록</h1>
-      <p class="text-sm font-mono mt-2" style="color: var(--text-2)">
-        {rows.length}개 · 영화 {moviesRaw.length} · 책 {booksRaw.length}
-      </p>
+  <section class="c-hero">
+    <p class="c-hero__eyebrow">Archive</p>
+    <h1>Records</h1>
+    <div class="c-hero__meta">
+      <strong>{rows.length} entries</strong>
+      <span>{moviesRaw.length} films · {booksRaw.length} books</span>
     </div>
 
-    <!-- Type filter -->
-    <div class="flex gap-1.5" id="type-filter">
+    <div class="c-filter" id="type-filter">
       {(['all', 'movie', 'book'] as const).map(t => (
-        <button class="type-btn" data-type={t}
-          style={`font-size:0.7rem; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.75rem; border-radius:4px; cursor:pointer; transition:all .15s; border:1px solid ${t === 'all' ? 'var(--accent)' : 'var(--border)'}; color:${t === 'all' ? 'var(--accent)' : 'var(--text-2)'}; background:transparent;`}>
-          {t === 'all' ? '전체' : t === 'movie' ? '영화' : '책'}
+        <button class={`c-filter-btn${t === 'all' ? ' is-active' : ''}`} data-type={t}>
+          {t === 'all' ? 'All' : t === 'movie' ? 'Films' : 'Books'}
         </button>
       ))}
     </div>
-  </div>
+  </section>
 
   {rows.length === 0 ? (
-    <div class="py-24 text-center">
-      <p class="label">아직 기록이 없어요</p>
+    <div style="padding: 6rem 0; text-align: center;">
+      <p class="c-hero__eyebrow">Nothing logged yet.</p>
     </div>
   ) : (
     <div>
-      <!-- Table header -->
-      <div class="hidden sm:grid gap-4 pb-3 mb-1"
-           style="grid-template-columns: 1.4rem 1fr 3.5rem 6rem 3.5rem; border-bottom: 1px solid var(--border);">
+      <div class="c-records-header">
         <div></div>
-        <p class="label">제목</p>
-        <p class="label text-right">별점</p>
-        <p class="label text-right">날짜</p>
-        <p class="label text-right">기간</p>
+        <p class="c-hero__eyebrow" style="margin:0">Title</p>
+        <p class="c-hero__eyebrow" style="margin:0; text-align:right">Rating</p>
+        <p class="c-hero__eyebrow" style="margin:0; text-align:right">Date</p>
+        <p class="c-hero__eyebrow" style="margin:0; text-align:right">Duration</p>
       </div>
 
-      <!-- Rows -->
       <div id="records-list">
         {rows.map(row => (
-          <div class="record-row py-4" data-type={row.type}
-               style="border-bottom: 1px solid var(--border);">
-
-            <!-- Desktop layout -->
-            <div class="hidden sm:grid gap-4 items-start"
-                 style="grid-template-columns: 1.4rem 1fr 3.5rem 6rem 3.5rem;">
-
-              <!-- Type indicator: thin vertical bar -->
-              <div class="mt-0.5 flex justify-center">
-                <div class="w-[2px] h-4 rounded-full"
-                     style={`background: ${row.type === 'movie' ? 'var(--accent)' : 'var(--text-3)'}`} />
-              </div>
-
-              <!-- Title + subtitle + review -->
-              <div class="min-w-0">
-                <p class="text-sm font-medium leading-snug" style="color: var(--text-1)">{row.title}</p>
-                {row.subtitle && (
-                  <p class="text-[11px] font-mono mt-0.5 truncate" style="color: var(--text-3)">{row.subtitle}</p>
-                )}
-                {row.review && (
-                  <p class="text-[11px] mt-1.5 line-clamp-2 leading-relaxed" style="color: var(--text-2)">{row.review}</p>
-                )}
-              </div>
-
-              <!-- Rating -->
-              <p class="text-sm font-mono text-right" style="color: var(--accent)">★ {row.rating}</p>
-
-              <!-- Date -->
-              <p class="text-[11px] font-mono text-right" style="color: var(--text-3)">
-                {fmtDate(row.date) ?? '—'}
-              </p>
-
-              <!-- Duration -->
-              <p class="text-[11px] font-mono text-right" style="color: var(--text-3)">
-                {row.duration ?? '—'}
-              </p>
+          <div class="c-record-row record-row" data-type={row.type}>
+            <div style="display:flex; justify-content:center; padding-top:0.2rem;">
+              <div style={`width:3px; height:1.1rem; border-radius:2px; background:${row.type === 'movie' ? 'var(--accent)' : 'var(--text-3)'}`} />
             </div>
-
-            <!-- Mobile layout -->
-            <div class="sm:hidden flex gap-3 items-start">
-              <div class="mt-1.5 shrink-0">
-                <div class="w-[2px] h-3 rounded-full"
-                     style={`background: ${row.type === 'movie' ? 'var(--accent)' : 'var(--text-3)'}`} />
-              </div>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-baseline justify-between gap-2">
-                  <p class="text-sm font-medium truncate" style="color: var(--text-1)">{row.title}</p>
-                  <span class="text-xs font-mono shrink-0" style="color: var(--accent)">★ {row.rating}</span>
-                </div>
-                {row.subtitle && (
-                  <p class="text-[11px] font-mono mt-0.5 truncate" style="color: var(--text-3)">{row.subtitle}</p>
-                )}
-                <div class="flex items-center gap-3 mt-1">
-                  <span class="text-[11px] font-mono" style="color: var(--text-3)">
-                    {fmtDate(row.date) ?? '날짜 미상'}
-                  </span>
-                  {row.duration && (
-                    <span class="text-[11px] font-mono" style="color: var(--text-3)">{row.duration}</span>
-                  )}
-                </div>
-                {row.review && (
-                  <p class="text-[11px] mt-1 line-clamp-1 leading-relaxed" style="color: var(--text-2)">{row.review}</p>
-                )}
-              </div>
+            <div style="min-width:0;">
+              <p style="margin:0; font-size:1.05rem; font-weight:500; line-height:1.3; color:var(--text-1)">{row.title}</p>
+              {row.subtitle && (
+                <p style="margin:0.2rem 0 0; font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--text-3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{row.subtitle}</p>
+              )}
+              {row.review && (
+                <p style="margin:0.4rem 0 0; font-size:0.8rem; line-height:1.5; color:var(--text-2); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{row.review}</p>
+              )}
             </div>
+            <p style="margin:0; font-size:0.85rem; font-family:'JetBrains Mono',monospace; text-align:right; color:var(--accent)">★ {row.rating}</p>
+            <p style="margin:0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; text-align:right; color:var(--text-3)">{fmtDate(row.date) ?? '—'}</p>
+            <p style="margin:0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; text-align:right; color:var(--text-3)">{row.duration ?? '—'}</p>
           </div>
         ))}
       </div>
@@ -168,19 +111,12 @@ function fmtDate(d: string | null) {
 
 <script is:inline>
   (function() {
-    var buttons = document.querySelectorAll('.type-btn');
+    var buttons = document.querySelectorAll('.c-filter-btn');
     var rows    = document.querySelectorAll('.record-row');
-
     buttons.forEach(function(btn) {
       btn.addEventListener('click', function() {
         var type = btn.getAttribute('data-type');
-
-        buttons.forEach(function(b) {
-          var isThis = b === btn;
-          b.style.borderColor = isThis ? 'var(--accent)' : 'var(--border)';
-          b.style.color       = isThis ? 'var(--accent)' : 'var(--text-2)';
-        });
-
+        buttons.forEach(function(b) { b.classList.toggle('is-active', b === btn); });
         rows.forEach(function(row) {
           row.style.display = (type === 'all' || row.getAttribute('data-type') === type) ? '' : 'none';
         });

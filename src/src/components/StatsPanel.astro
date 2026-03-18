@@ -31,42 +31,26 @@ const totalMovies = movies.length;
 const totalBooks  = books.length;
 ---
 
-<div class="mb-14 pb-10 grid grid-cols-3 gap-2 sm:gap-6"
-     style="border-bottom: 1px solid var(--border)">
-
-  <!-- This month -->
-  <div class="stat-cell">
-    <p class="label mb-2">이번 달</p>
-    <p class="display-num" style="color: var(--accent)">
-      {moviesThisMonth + booksThisMonth}
-    </p>
-    <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+<div class="c-stat-grid" style="margin-bottom:3rem;">
+  <div class="c-stat-cell">
+    <p class="c-hero__eyebrow" style="margin-bottom:0.8rem">이번 달</p>
+    <p class="display-num" style="color: var(--accent)">{moviesThisMonth + booksThisMonth}</p>
+    <p style="margin:0.4rem 0 0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">
       영화 {moviesThisMonth} · 책 {booksThisMonth}
     </p>
   </div>
-
-  <!-- This year -->
-  <div class="stat-cell border-l pl-3 sm:pl-8" style="border-color: var(--border);">
-    <p class="label mb-2">올해</p>
+  <div class="c-stat-cell">
+    <p class="c-hero__eyebrow" style="margin-bottom:0.8rem">올해</p>
     <p class="display-num">{moviesThisYear + booksThisYear}</p>
-    <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+    <p style="margin:0.4rem 0 0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">
       영화 {moviesThisYear} · 책 {booksThisYear}
     </p>
   </div>
-
-  <!-- Lifetime totals -->
-  <div class="stat-cell border-l pl-3 sm:pl-8" style="border-color: var(--border);">
-    <p class="label mb-2">전체</p>
+  <div class="c-stat-cell">
+    <p class="c-hero__eyebrow" style="margin-bottom:0.8rem">전체</p>
     <p class="display-num">{totalMovies + totalBooks}</p>
-    <p class="text-xs font-mono mt-1" style="color: var(--text-3)">
+    <p style="margin:0.4rem 0 0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">
       영화 {totalMovies} · 책 {totalBooks}
     </p>
   </div>
-
 </div>
-
-<style>
-  .stat-cell {
-    min-width: 0;
-  }
-</style>

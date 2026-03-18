@@ -4,8 +4,9 @@ import '../styles/global.css';
 export interface Props {
   title: string;
   description?: string;
+  pageClass?: string;
 }
-const { title, description = '강병수의 문화생활 — 영화와 책 기록' } = Astro.props;
+const { title, description = '강병수의 문화생활 — 영화와 책 기록', pageClass = '' } = Astro.props;
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 ---
@@ -18,35 +19,20 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
   <meta name="description" content={description} />
   <title>{title} — 강병수의 문화생활</title>
   <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <!-- Pretendard: Korean body font -->
-  <link rel="stylesheet" as="style" crossorigin
-    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-  <!-- JetBrains Mono: numbers, dates, metadata -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <script is:inline>
-    // Prevent FOMT (Flash of Mismatched Theme)
-    (function () {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'light' || (!saved && !prefersDark)) {
-        document.documentElement.classList.remove('dark');
-      } else {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
 </head>
-<body class="min-h-screen font-sans">
+<body class={`min-h-screen font-sans ${pageClass}`}>
   <slot name="nav" />
-  <main class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-12">
+  <main class="c-shell">
     <slot />
   </main>
-  <footer class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-8 mt-4"
-          style="border-top: 1px solid var(--border)">
-    <p class="label">강병수의 문화생활 · {new Date().getFullYear()}</p>
+  <footer class="culture-footer">
+    <p>강병수의 문화생활 · {new Date().getFullYear()}</p>
   </footer>
 </body>
 </html>

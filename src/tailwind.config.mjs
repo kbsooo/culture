@@ -1,15 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,ts,tsx}'],
-  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Pretendard Variable"', 'Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"Alegreya Sans"', '"Noto Sans KR"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['"Newsreader"', '"Noto Serif KR"', 'ui-serif', 'serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
-        // One accent: warm gold — timeless, cinematic, editorial
         accent: {
           DEFAULT: 'var(--accent)',
           muted: 'var(--accent-muted)',

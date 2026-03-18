@@ -9,29 +9,24 @@ import BookCard from '../components/BookCard.astro';
 import moviesRaw from '../../../data/movies.json';
 import booksRaw from '../../../data/books.json';
 
-// Heatmap: movies by watched_date, books by start_date + finish_date events only
 interface ActivityEntry { movieCount: number; bookCount: number; }
 const activityMap = new Map<string, ActivityEntry>();
 const getOrCreate = (date: string): ActivityEntry => {
   if (!activityMap.has(date)) activityMap.set(date, { movieCount: 0, bookCount: 0 });
   return activityMap.get(date)!;
 };
-
 for (const m of moviesRaw) {
   if (!m.watched_date) continue;
   getOrCreate(m.watched_date).movieCount++;
 }
 for (const b of booksRaw) {
-  // 시작일 (책 산 날 / 읽기 시작한 날)
   if (b.start_date) getOrCreate(b.start_date).bookCount++;
-  // 완독일 — start_date와 같은 날이어도 별도 이벤트로 카운트
   if (b.finish_date) getOrCreate(b.finish_date).bookCount++;
 }
 const activityData = Array.from(activityMap.entries()).map(([date, { movieCount, bookCount }]) => ({
   date, movieCount, bookCount,
 }));
 
-// Sort recent movies/books — dated first
 const recentMovies = [...moviesRaw]
   .sort((a, b) => (b.watched_date ?? '').localeCompare(a.watched_date ?? ''))
   .slice(0, 6);
@@ -44,74 +39,63 @@ const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 ---
 
-<BaseLayout title="홈">
+<BaseLayout title="Home" pageClass="page--home">
   <NavBar slot="nav" />
 
-  <!-- Page title -->
-  <div class="mb-12">
-    <p class="label mb-3">강병수의 문화생활</p>
-    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight leading-none" style="color: var(--text-1)">
-      기록
-    </h1>
-  </div>
+  <section class="c-hero">
+    <p class="c-hero__eyebrow">Byungsoo Kang · Culture Log</p>
+    <h1>Culture</h1>
+    <p class="c-hero__meta">
+      Films & books, logged.
+      <strong>{moviesRaw.length} films · {booksRaw.length} books</strong>
+    </p>
+  </section>
 
-  <!-- Stats strip (always visible) -->
+  <nav class="c-nav">
+    <a href={`${base}/movies/`}>Movies</a>
+    <a href={`${base}/books/`}>Books</a>
+    <a href={`${base}/records/`}>Records</a>
+    <a href={`${base}/stats/`}>Stats</a>
+  </nav>
+
   <StatsPanel movies={moviesRaw} books={booksRaw} />
 
-  <!-- Activity calendar -->
-  <section class="mb-16">
-    <p class="label mb-5">활동 캘린더</p>
+  <section class="c-section">
+    <div class="c-section-header">
+      <h2 class="c-section-title">Activity</h2>
+    </div>
     <HeatmapCalendar data={activityData} />
   </section>
 
-  {hasContent ? (
+  {hasContent && (
     <Fragment>
-      <!-- Recent movies -->
       {recentMovies.length > 0 && (
-        <section class="mb-16">
-          <div class="flex items-baseline justify-between mb-5">
-            <p class="label">최근 영화</p>
+        <section class="c-section">
+          <div class="c-section-header">
+            <h2 class="c-section-title">Recent Films</h2>
             {moviesRaw.length > 6 && (
-              <a href={`${base}/movies/`}
-                 class="text-xs font-mono transition-colors"
-                 style="color: var(--text-3);"
-                 onmouseover="this.style.color='var(--accent)'"
-                 onmouseout="this.style.color='var(--text-3)'"
-              >전체 보기 →</a>
+              <a href={`${base}/movies/`} class="c-see-all">All films →</a>
             )}
           </div>
-          <div class="grid grid-cols-2 gap-3 sm:grid-cols-cards sm:gap-5">
+          <div class="c-cards">
             {recentMovies.map(movie => <MovieCard movie={movie} />)}
           </div>
         </section>
       )}
 
-      <!-- Recent books -->
       {recentBooks.length > 0 && (
-        <section class="mb-16">
-          <div class="flex items-baseline justify-between mb-5">
-            <p class="label">최근 책</p>
+        <section class="c-section">
+          <div class="c-section-header">
+            <h2 class="c-section-title">Recent Books</h2>
             {booksRaw.length > 6 && (
-              <a href={`${base}/books/`}
-                 class="text-xs font-mono transition-colors"
-                 style="color: var(--text-3);"
-                 onmouseover="this.style.color='var(--accent)'"
-                 onmouseout="this.style.color='var(--text-3)'"
-              >전체 보기 →</a>
+              <a href={`${base}/books/`} class="c-see-all">All books →</a>
             )}
           </div>
-          <div class="grid grid-cols-2 gap-3 sm:grid-cols-cards sm:gap-5">
+          <div class="c-cards">
             {recentBooks.map(book => <BookCard book={book} />)}
           </div>
         </section>
       )}
     </Fragment>
-  ) : (
-    <div class="py-16 text-center">
-      <p class="label mb-6">아직 기록이 없어요</p>
-      <p class="text-sm" style="color: var(--text-2)">
-        GitHub Issues에서 영화나 책을 기록해보세요
-      </p>
-    </div>
   )}
 </BaseLayout>

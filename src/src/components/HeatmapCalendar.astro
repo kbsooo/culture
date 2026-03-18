@@ -107,13 +107,13 @@ function cellTitle(cell: Cell): string {
   <!-- Legend -->
   <div class="heatmap-legend">
     <span class="legend-item">
-      <span class="legend-dot movie"></span>영화
+      <span class="legend-dot movie"></span>Films
     </span>
     <span class="legend-item">
-      <span class="legend-dot book"></span>책
+      <span class="legend-dot book"></span>Books
     </span>
     <span class="legend-item">
-      <span class="legend-dot both"></span>둘 다
+      <span class="legend-dot both"></span>Both
     </span>
   </div>
 </div>
@@ -158,24 +158,18 @@ function cellTitle(cell: Cell): string {
 
   /* ── 공통 ── */
   .heatmap-cell.future { background: transparent; }
-  .heatmap-cell.empty  { background: var(--border); }
+  .heatmap-cell.empty  { background: rgba(0, 0, 0, 0.08); }
 
-  /* ── 영화 (Gold / Accent) ── */
-  .heatmap-cell.movie { background: #c9933a; }
+  /* ── Films: coral red ── */
+  .heatmap-cell.movie { background: #d64045; }
 
-  /* ── 책 (Steel Blue) ── */
-  .heatmap-cell.book  { background: #5c84b0; }
+  /* ── Books: sky blue ── */
+  .heatmap-cell.book  { background: #4a90d9; }
 
-  /* ── 영화 + 책 (Soft Purple) ── */
-  .heatmap-cell.both  { background: #7b64b4; }
+  /* ── Both: soft purple ── */
+  .heatmap-cell.both  { background: #9b59b6; }
 
-  /* ── 다크 모드 ── */
-  :global(html.dark) .heatmap-cell.empty  { background: var(--border); }
-  :global(html.dark) .heatmap-cell.movie  { background: #d4a853; }
-  :global(html.dark) .heatmap-cell.book   { background: #5a90c8; }
-  :global(html.dark) .heatmap-cell.both   { background: #9070c8; }
-
-  /* ── 범례 ── */
+  /* ── Legend ── */
   .heatmap-legend {
     display: flex;
     gap: 1rem;
@@ -195,13 +189,9 @@ function cellTitle(cell: Cell): string {
     border-radius: 2px;
     flex-shrink: 0;
   }
-  .legend-dot.movie { background: #c9933a; }
-  .legend-dot.book  { background: #5c84b0; }
-  .legend-dot.both  { background: #7b64b4; }
-
-  :global(html.dark) .legend-dot.movie { background: #d4a853; }
-  :global(html.dark) .legend-dot.book  { background: #5a90c8; }
-  :global(html.dark) .legend-dot.both  { background: #9070c8; }
+  .legend-dot.movie { background: #d64045; }
+  .legend-dot.book  { background: #4a90d9; }
+  .legend-dot.both  { background: #9b59b6; }
 
   @media (max-width: 640px) {
     .heatmap-cell { width: 10px; height: 10px; }
