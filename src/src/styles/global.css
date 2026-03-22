@@ -8,7 +8,7 @@
   --accent-muted: #d4a85350;
 
   /* Room palette */
-  --room-home:    #fcf5c7;   /* cream */
+  --room-home:    #f4efe6;   /* warm paper */
   --room-movies:  #1a1a2e;   /* deep navy */
   --room-books:   #c8dbbe;   /* sage green */
   --room-records: #f0ece2;   /* warm ivory */
@@ -33,6 +33,7 @@
   }
 
   body {
+    position: relative;
     word-break: keep-all;
     overflow-wrap: break-word;
     overflow-x: hidden;
@@ -93,7 +94,7 @@
   }
 
   .display-num {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, monospace;
     font-size: 2.5rem;
     font-weight: 700;
     line-height: 1;
@@ -199,6 +200,8 @@
 
 /* ── Editorial page shell ── */
 .c-shell {
+  position: relative;
+  z-index: 1;
   width: min(1280px, calc(100vw - 3rem));
   margin: 0 auto;
   padding: 7rem 0 8rem;
@@ -273,6 +276,96 @@
   letter-spacing: -0.05em;
 }
 
+.c-home-stage {
+  position: relative;
+  width: 100vw;
+  min-height: calc(100svh - 2rem);
+  margin: -4.75rem 0 3rem calc(50% - 50vw);
+  padding: clamp(6.5rem, 9vh, 7.5rem) max(1.5rem, calc((100vw - min(1280px, calc(100vw - 3rem))) / 2)) clamp(1.5rem, 4vh, 2.5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.7fr);
+  align-items: center;
+  gap: 2rem;
+  overflow: clip;
+  border-bottom: 1px solid var(--border);
+}
+
+.c-home-stage__copy,
+.c-home-stage__visual {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: c-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.c-home-stage__visual {
+  animation-delay: 0.14s;
+}
+
+.c-home-stage h1 {
+  margin: 0 0 1rem;
+  max-width: 7ch;
+  font-size: clamp(5.8rem, 14vw, 11rem);
+  font-weight: 800;
+  letter-spacing: -0.07em;
+  line-height: 0.85;
+  color: var(--text-1);
+}
+
+.c-home-stage__lede {
+  max-width: 26rem;
+  margin: 0;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.34;
+  color: rgba(25, 24, 23, 0.72);
+}
+
+.c-home-stage__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin: 1.6rem 0 0;
+  font-size: 0.82rem;
+  font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, monospace;
+  color: rgba(25, 24, 23, 0.56);
+}
+
+.c-home-stage__actions {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 2rem;
+}
+
+.c-home-stage__actions a {
+  width: fit-content;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.92;
+  color: var(--text-1);
+  border-bottom: 1px solid rgba(25, 24, 23, 0.12);
+  transition: transform 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.c-home-stage__actions a:hover {
+  transform: translateX(0.45rem);
+  border-color: rgba(200, 30, 20, 0.25);
+  color: var(--accent);
+}
+
+.c-home-stage__visual {
+  justify-self: end;
+  width: min(100%, 30rem);
+}
+
+.c-home-stage__visual img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 1.35rem;
+  box-shadow: 0 26px 80px rgba(25, 24, 23, 0.18);
+}
+
 /* ── Section ── */
 .c-section {
   margin-top: 4rem;
@@ -299,7 +392,7 @@
 
 .c-see-all {
   font-size: 0.75rem;
-  font-family: "JetBrains Mono", monospace;
+  font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, monospace;
   color: var(--text-3);
   text-decoration: none;
   letter-spacing: 0.05em;
@@ -318,7 +411,7 @@
 
 .c-filter-btn {
   font-size: 0.7rem;
-  font-family: "JetBrains Mono", monospace;
+  font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.4rem 0.9rem;
@@ -375,11 +468,35 @@
 }
 
 .c-stat-cell {
-  padding: 2rem 0;
+  padding: 1.8rem 0 1.9rem;
   border-right: 1px solid var(--border);
 }
 .c-stat-cell:last-child { border-right: none; }
 .c-stat-cell + .c-stat-cell { padding-left: 2rem; }
+
+.c-stat-label {
+  margin: 0 0 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.c-stat-number {
+  font-size: clamp(2.8rem, 6vw, 4.6rem);
+}
+
+.c-stat-number--accent {
+  color: var(--accent);
+}
+
+.c-stat-detail {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, monospace;
+  color: var(--text-3);
+}
 
 .c-stat-box {
   border: 1px solid var(--border);
@@ -413,6 +530,17 @@ body.page--stats  .c-highlight-cell { background: var(--room-stats); }
   padding: 0.4rem 0;
 }
 
+@keyframes c-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 900px) {
   .c-shell {
     width: calc(100vw - 2rem);
@@ -425,6 +553,23 @@ body.page--stats  .c-highlight-cell { background: var(--room-stats); }
 
   .c-hero h1 {
     font-size: clamp(4.5rem, 18vw, 8rem);
+  }
+
+  .c-home-stage {
+    min-height: auto;
+    margin-top: -3.5rem;
+    padding: 5.75rem 1rem 1.5rem;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .c-home-stage__visual {
+    justify-self: start;
+    width: min(100%, 18rem);
+  }
+
+  .c-home-stage__actions a {
+    font-size: clamp(2.2rem, 10vw, 4rem);
   }
 
   .c-nav a {
@@ -449,6 +594,74 @@ body.page--stats  .c-highlight-cell { background: var(--room-stats); }
   }
   .c-stat-cell + .c-stat-cell { padding-left: 0; }
   .c-stat-cell:last-child { border-bottom: none; }
+}
+
+@media (max-width: 720px) {
+  .culture-wordmark {
+    padding: 1rem;
+  }
+
+  .culture-wordmark__nav {
+    display: none;
+  }
+
+  .c-home-stage h1 {
+    margin-bottom: 0.65rem;
+    font-size: clamp(3.6rem, 18vw, 5.4rem);
+  }
+
+  .c-home-stage__lede {
+    max-width: 18rem;
+    font-size: 1rem;
+  }
+
+  .c-home-stage__meta {
+    margin-top: 1rem;
+    font-size: 0.74rem;
+  }
+
+  .c-home-stage__actions {
+    gap: 0.3rem;
+    margin-top: 1.25rem;
+  }
+
+  .c-home-stage__actions a {
+    font-size: 2rem;
+  }
+
+  .c-home-stage__visual {
+    width: min(100%, 15rem);
+  }
+}
+
+@media (max-height: 760px) {
+  .c-home-stage {
+    padding-top: 5.75rem;
+    padding-bottom: 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .c-home-stage h1 {
+    font-size: clamp(4.8rem, 10vw, 7rem);
+  }
+
+  .c-home-stage__lede {
+    max-width: 22rem;
+    font-size: 1.05rem;
+  }
+
+  .c-home-stage__actions {
+    gap: 0.25rem;
+    margin-top: 1.2rem;
+  }
+
+  .c-home-stage__actions a {
+    font-size: clamp(1.85rem, 3vw, 2.75rem);
+  }
+
+  .c-home-stage__visual {
+    width: min(100%, 26rem);
+  }
 }
 
 /* ─── cal-heatmap ─── */

@@ -31,25 +31,25 @@ const totalMovies = movies.length;
 const totalBooks  = books.length;
 ---
 
-<div class="c-stat-grid" style="margin-bottom:3rem;">
+<div class="c-stat-grid">
   <div class="c-stat-cell">
-    <p class="c-hero__eyebrow" style="margin-bottom:0.8rem">이번 달</p>
-    <p class="display-num" style="color: var(--accent)">{moviesThisMonth + booksThisMonth}</p>
-    <p style="margin:0.4rem 0 0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">
+    <p class="c-stat-label">이번 달</p>
+    <p class="display-num c-stat-number c-stat-number--accent">{moviesThisMonth + booksThisMonth}</p>
+    <p class="c-stat-detail">
       영화 {moviesThisMonth} · 책 {booksThisMonth}
     </p>
   </div>
   <div class="c-stat-cell">
-    <p class="c-hero__eyebrow" style="margin-bottom:0.8rem">올해</p>
-    <p class="display-num">{moviesThisYear + booksThisYear}</p>
-    <p style="margin:0.4rem 0 0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">
+    <p class="c-stat-label">올해</p>
+    <p class="display-num c-stat-number">{moviesThisYear + booksThisYear}</p>
+    <p class="c-stat-detail">
       영화 {moviesThisYear} · 책 {booksThisYear}
     </p>
   </div>
   <div class="c-stat-cell">
-    <p class="c-hero__eyebrow" style="margin-bottom:0.8rem">전체</p>
-    <p class="display-num">{totalMovies + totalBooks}</p>
-    <p style="margin:0.4rem 0 0; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">
+    <p class="c-stat-label">전체</p>
+    <p class="display-num c-stat-number">{totalMovies + totalBooks}</p>
+    <p class="c-stat-detail">
       영화 {totalMovies} · 책 {totalBooks}
     </p>
   </div>
