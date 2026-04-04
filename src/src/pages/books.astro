@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NavBar from '../components/NavBar.astro';
 import BookCard from '../components/BookCard.astro';
 import booksRaw from '../../../data/books.json';
 
@@ -30,8 +29,6 @@ const years = Object.entries(byYear).sort((a, b) => {
 ---
 
 <BaseLayout title="Books" pageClass="page--books">
-  <NavBar slot="nav" />
-
   <section class="c-hero">
     <p class="c-hero__eyebrow">Collection</p>
     <h1>Books</h1>
@@ -60,7 +57,7 @@ const years = Object.entries(byYear).sort((a, b) => {
       ))}
     </div>
   ) : (
-    <div style="padding: 6rem 0; text-align: center;">
+    <div style="padding: 4rem 0; text-align: center;">
       <p class="c-hero__eyebrow">No books logged yet.</p>
     </div>
   )}

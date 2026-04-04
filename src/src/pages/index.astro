@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NavBar from '../components/NavBar.astro';
 import StatsPanel from '../components/StatsPanel.astro';
 import HeatmapCalendar from '../components/HeatmapCalendar.astro';
 import MovieCard from '../components/MovieCard.astro';
@@ -43,26 +42,22 @@ const latestActivityDate = activityData
 ---
 
 <BaseLayout title="Home" pageClass="page--home">
-  <NavBar slot="nav" />
-
-  <section class="c-home-stage">
-    <div class="c-home-stage__copy">
-      <p class="c-hero__eyebrow">Byungsoo Kang · Culture Log</p>
-      <h1>Culture</h1>
-      <p class="c-home-stage__lede">
-        Films and books, logged with dates, ratings, and short memory traces.
-      </p>
-      <p class="c-home-stage__meta">
-        <span>{moviesRaw.length} films · {booksRaw.length} books</span>
-        {latestActivityDate && <span>Last entry {latestActivityDate}</span>}
-      </p>
-      <nav class="c-home-stage__actions">
-        <a href={`${base}/movies/`}>Movies</a>
-        <a href={`${base}/books/`}>Books</a>
-        <a href={`${base}/records/`}>Records</a>
-        <a href={`${base}/stats/`}>Stats</a>
-      </nav>
-    </div>
+  <section class="c-home-intro">
+    <span class="c-home-intro__badge">Culture Log</span>
+    <h1>Culture</h1>
+    <p class="c-home-intro__lede">
+      Films and books, logged with dates, ratings, and short memory traces.
+    </p>
+    <p class="c-home-intro__meta">
+      <span>{moviesRaw.length} films · {booksRaw.length} books</span>
+      {latestActivityDate && <span>Last entry {latestActivityDate}</span>}
+    </p>
+    <nav class="c-home-nav">
+      <a href={`${base}/movies/`}>Movies</a>
+      <a href={`${base}/books/`}>Books</a>
+      <a href={`${base}/records/`}>Records</a>
+      <a href={`${base}/stats/`}>Stats</a>
+    </nav>
   </section>
 
   <StatsPanel movies={moviesRaw} books={booksRaw} />

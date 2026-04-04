@@ -25,7 +25,6 @@ const posterUrl = movie.poster_path
 
 const displayTitle = movie.title_ko || movie.user_title || '';
 
-// 원제가 한국어 제목과 다른 경우에만 표시
 const showOriginal = movie.title_original &&
   movie.title_original !== displayTitle &&
   movie.title_original !== movie.title_ko;
@@ -36,7 +35,6 @@ const dateStr = movie.watched_date
     })
   : null;
 
-// 런타임 포맷: 117분 → "1h 57m"
 function fmtRuntime(min: number) {
   const h = Math.floor(min / 60);
   const m = min % 60;
@@ -44,83 +42,45 @@ function fmtRuntime(min: number) {
 }
 
 const runtimeStr = movie.runtime && movie.runtime > 0 ? fmtRuntime(movie.runtime) : null;
-
-// 장르 최대 2개
 const topGenres = (movie.genres ?? []).slice(0, 2);
 ---
 
-<!--
-  Cinematic card: poster with gradient overlay for title, runtime badge, genre chips.
-  Minimal info below — date, rating, review only.
--->
-<article class="group cursor-default" style="color: var(--text-1)">
-  <!-- Poster with cinematic overlay -->
-  <div class="relative aspect-[2/3] overflow-hidden rounded-sm mb-3"
-       style="background: var(--border);">
+<article class="c-movie-card">
+  <div class="c-movie-card__poster">
     <img
       src={posterUrl}
       alt={`${displayTitle} 포스터`}
       loading="lazy"
       decoding="async"
-      class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
       onerror={`this.src='${base}/placeholder-movie.svg'`}
     />
 
-    <!-- Runtime badge (top-right) -->
     {runtimeStr && (
-      <span class="absolute top-2 right-2 font-mono text-white rounded-sm px-1.5 py-0.5"
-            style="font-size: 9px; background: rgba(0,0,0,0.65); letter-spacing: 0.05em;">
-        {runtimeStr}
-      </span>
+      <span class="c-movie-card__runtime">{runtimeStr}</span>
     )}
 
-    <!-- Bottom cinematic overlay: genres + title -->
-    <div class="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5 pt-8 transition-opacity duration-300"
-         style="background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);">
-
-      <!-- Genre chips -->
+    <div class="c-movie-card__overlay">
       {topGenres.length > 0 && (
-        <div class="flex flex-wrap gap-1 mb-1.5">
+        <div class="c-movie-card__genres">
           {topGenres.map(genre => (
-            <span class="font-mono text-white rounded-sm px-1 py-0.5"
-                  style="font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(255,255,255,0.18);">
-              {genre}
-            </span>
+            <span class="c-movie-card__genre">{genre}</span>
           ))}
         </div>
       )}
-
-      <!-- Title in overlay -->
-      <h3 class="text-sm font-semibold leading-snug line-clamp-2 text-white">
-        {displayTitle}
-      </h3>
-
-      <!-- Original title if different -->
+      <h3 class="c-movie-card__title">{displayTitle}</h3>
       {showOriginal && (
-        <p class="font-mono text-white/60 leading-tight mt-0.5 line-clamp-1"
-           style="font-size: 9px;">
-          {movie.title_original}
-        </p>
+        <p class="c-movie-card__original">{movie.title_original}</p>
       )}
     </div>
   </div>
 
-  <!-- Info below poster: date + rating + review only -->
-  <div class="space-y-0.5 px-0.5">
-    <div class="flex items-center justify-between gap-2">
-      {dateStr
-        ? <span class="text-[11px] font-mono" style="color: var(--text-3)">{dateStr}</span>
-        : <span class="text-[11px] font-mono" style="color: var(--text-3)">날짜 미상</span>
-      }
-      <span class="text-[11px] font-mono shrink-0" style="color: var(--accent)">
-        ★ {movie.rating}
-      </span>
+  <div class="c-movie-card__info">
+    <div class="c-movie-card__row">
+      <span class="c-movie-card__date">{dateStr ?? '날짜 미상'}</span>
+      <span class="c-movie-card__rating">★ {movie.rating}</span>
     </div>
-
     {movie.review && (
-      <p class="text-[11px] leading-relaxed line-clamp-2 pt-0.5" style="color: var(--text-2)">
-        {movie.review}
-      </p>
+      <p class="c-movie-card__review">{movie.review}</p>
     )}
   </div>
 </article>

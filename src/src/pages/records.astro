@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NavBar from '../components/NavBar.astro';
 import moviesRaw from '../../../data/movies.json';
 import booksRaw from '../../../data/books.json';
 
@@ -51,7 +50,6 @@ function fmtDate(d: string | null) {
 ---
 
 <BaseLayout title="Records" pageClass="page--records">
-  <NavBar slot="nav" />
 
   <section class="c-hero">
     <p class="c-hero__eyebrow">Archive</p>

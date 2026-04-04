@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NavBar from '../components/NavBar.astro';
 import MovieCard from '../components/MovieCard.astro';
 import moviesRaw from '../../../data/movies.json';
 
@@ -28,8 +27,6 @@ const years = Object.entries(byYear).sort((a, b) => {
 ---
 
 <BaseLayout title="Movies" pageClass="page--movies">
-  <NavBar slot="nav" />
-
   <section class="c-hero">
     <p class="c-hero__eyebrow">Collection</p>
     <h1>Movies</h1>
@@ -57,7 +54,7 @@ const years = Object.entries(byYear).sort((a, b) => {
       ))}
     </div>
   ) : (
-    <div style="padding: 6rem 0; text-align: center;">
+    <div style="padding: 4rem 0; text-align: center;">
       <p class="c-hero__eyebrow">No films logged yet.</p>
     </div>
   )}

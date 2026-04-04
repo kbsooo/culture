@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NavBar from '../components/NavBar.astro';
 import GenreChart from '../components/GenreChart.astro';
 import moviesRaw from '../../../data/movies.json';
 import booksRaw from '../../../data/books.json';
@@ -190,7 +189,6 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 ---
 
 <BaseLayout title="Stats" pageClass="page--stats">
-  <NavBar slot="nav" />
 
   <section class="c-hero">
     <p class="c-hero__eyebrow">Summary</p>
