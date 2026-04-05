@@ -42,27 +42,54 @@
 
 /* ── Tokens (Dark) ── */
 html[data-theme="dark"] {
-  --bg:          #161618;
-  --bg-elevated: #1e1e22;
-  --bg-sunken:   #111113;
+  --bg:          #000000;
+  --bg-elevated: #0e0e0e;
+  --bg-sunken:   #080808;
   --text:        #e4e2de;
   --text-2:      #a09c96;
-  --text-3:      #6a665f;
-  --line:        rgba(234, 232, 228, 0.08);
-  --line-strong: rgba(234, 232, 228, 0.14);
+  --text-3:      #5a5755;
+  --line:        rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.12);
   --accent:      #7eb8da;
-  --accent-soft: rgba(126, 184, 218, 0.12);
+  --accent-soft: rgba(126, 184, 218, 0.10);
   --accent-hover: #9acae5;
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.15);
-  --shadow-md:   0 4px 12px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.2);
-  --nav-bg:      rgba(22, 22, 24, 0.85);
+  --shadow-sm:   none;
+  --shadow-md:   0 4px 20px rgba(0,0,0,0.5);
+  --nav-bg:      rgba(0, 0, 0, 0.8);
 
-  --room-home:    #161618;
-  --room-movies:  #161618;
-  --room-books:   #161618;
-  --room-records: #161618;
-  --room-stats:   #161618;
+  --room-home:    #000000;
+  --room-movies:  #000000;
+  --room-books:   #000000;
+  --room-records: #000000;
+  --room-stats:   #000000;
   color-scheme: dark;
+}
+
+/* ── Starfield ── */
+html[data-theme="dark"] body {
+  background-color: #000000;
+  background-image:
+    radial-gradient(1.2px 1.2px at 15% 25%, rgba(255,255,255,0.18) 0%, transparent 100%),
+    radial-gradient(1px 1px at 72% 12%, rgba(255,255,255,0.14) 0%, transparent 100%),
+    radial-gradient(0.8px 0.8px at 35% 68%, rgba(255,255,255,0.10) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 55%, rgba(255,255,255,0.13) 0%, transparent 100%),
+    radial-gradient(0.6px 0.6px at 50% 85%, rgba(255,255,255,0.08) 0%, transparent 100%),
+    radial-gradient(1.1px 1.1px at 5% 90%, rgba(255,255,255,0.12) 0%, transparent 100%),
+    radial-gradient(0.7px 0.7px at 60% 38%, rgba(255,255,255,0.09) 0%, transparent 100%),
+    radial-gradient(1px 1px at 28% 5%, rgba(255,255,255,0.15) 0%, transparent 100%),
+    radial-gradient(0.5px 0.5px at 92% 78%, rgba(255,255,255,0.07) 0%, transparent 100%),
+    radial-gradient(0.9px 0.9px at 42% 45%, rgba(255,255,255,0.11) 0%, transparent 100%);
+  background-size:
+    280px 320px,
+    350px 250px,
+    190px 380px,
+    420px 290px,
+    230px 410px,
+    310px 220px,
+    370px 340px,
+    260px 360px,
+    400px 270px,
+    330px 300px;
 }
 
 /* ── Reset ── */
