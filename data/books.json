@@ -1,5 +1,35 @@
 [
   {
+    "id": 83,
+    "user_title": "군주론",
+    "rating": 5,
+    "review": "그냥 뭐 그럭저럭.\n(옛날 시절에) 어떻게 해야 왕이 효율적으로 다스릴 수 있을지에 대한 이야기",
+    "start_date": "2026-03-27",
+    "finish_date": "2026-04-04",
+    "reading_days": 8,
+    "added_at": "2026-04-10T12:58:15.918Z",
+    "aladin_item_id": 389431456,
+    "google_volume_id": null,
+    "title_normalized": "군주론 - 제5판",
+    "authors": [
+      "니콜로 마키아벨리",
+      "강정인",
+      "김경희"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/38943/14/cover200/k742137012_1.jpg",
+    "cover_id": null,
+    "publisher": "까치",
+    "first_publish_year": 2026,
+    "subjects": [
+      "국내도서",
+      "사회과학",
+      "정치학/외교학/행정학",
+      "정치사상사"
+    ],
+    "pages": 376,
+    "isbn": "9788972915782"
+  },
+  {
     "id": 45,
     "user_title": "부분과 전체",
     "rating": 8,
