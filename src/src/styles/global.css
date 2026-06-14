@@ -1,122 +1,73 @@
 /* ══════════════════════════════════════════════
    Design System — Culture Log
-   Shared tokens with blog (kbsoo.github.io)
-   깔끔 · 모던 · 귀여운
+   SSI-inspired declaration mode
    ══════════════════════════════════════════════ */
 
 /* ── Tokens (Light) ── */
 :root {
   /* Color */
-  --bg:          #fafaf8;
-  --bg-elevated: #ffffff;
-  --bg-sunken:   #f3f2ef;
-  --text:        #1a1a1a;
-  --text-2:      #5a5856;
-  --text-3:      #9a9694;
-  --line:        rgba(26, 26, 26, 0.08);
-  --line-strong: rgba(26, 26, 26, 0.15);
-  --accent:      #3a8bbd;
-  --accent-soft: rgba(58, 139, 189, 0.10);
-  --accent-hover: #2e7aab;
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-  --shadow-md:   0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
-  --nav-bg:      rgba(250, 250, 248, 0.85);
+  --bg:          #111213;
+  --bg-elevated: #111213;
+  --bg-sunken:   #18191a;
+  --text:        #d6d6d6;
+  --text-2:      #b8b8b8;
+  --text-3:      #858585;
+  --line:        rgba(214, 214, 214, 0.18);
+  --line-strong: rgba(214, 214, 214, 0.32);
+  --accent:      #a8d5ba;
+  --accent-soft: rgba(168, 213, 186, 0.12);
+  --accent-hover: #c8ead5;
+  --shadow-sm:   none;
+  --shadow-md:   none;
+  --nav-bg:      transparent;
 
-  --room-home:    #fafaf8;
-  --room-movies:  #fafaf8;
-  --room-books:   #fafaf8;
-  --room-records: #fafaf8;
-  --room-stats:   #fafaf8;
+  --room-home:    #111213;
+  --room-movies:  #111213;
+  --room-books:   #111213;
+  --room-records: #111213;
+  --room-stats:   #111213;
 
   /* Typography */
-  --font-sans:  "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono:  "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  --font-sans:  "SF Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+  --font-mono:  "SF Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
 
   /* Spacing */
-  --max-width: min(960px, calc(100vw - 2.5rem));
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --max-width: min(650px, calc(100vw - 20px));
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
   --radius-pill: 999px;
 }
 
 /* ── Tokens (Dark) ── */
 html[data-theme="dark"] {
-  --bg:          #000000;
-  --bg-elevated: #0e0e0e;
-  --bg-sunken:   #080808;
-  --text:        #e4e2de;
-  --text-2:      #a09c96;
-  --text-3:      #5a5755;
-  --line:        rgba(255, 255, 255, 0.07);
-  --line-strong: rgba(255, 255, 255, 0.12);
-  --accent:      #7eb8da;
-  --accent-soft: rgba(126, 184, 218, 0.10);
-  --accent-hover: #9acae5;
+  --bg:          #111213;
+  --bg-elevated: #111213;
+  --bg-sunken:   #18191a;
+  --text:        #d6d6d6;
+  --text-2:      #b8b8b8;
+  --text-3:      #858585;
+  --line:        rgba(214, 214, 214, 0.18);
+  --line-strong: rgba(214, 214, 214, 0.32);
+  --accent:      #a8d5ba;
+  --accent-soft: rgba(168, 213, 186, 0.12);
+  --accent-hover: #c8ead5;
   --shadow-sm:   none;
-  --shadow-md:   0 4px 20px rgba(0,0,0,0.5);
-  --nav-bg:      rgba(0, 0, 0, 0.8);
+  --shadow-md:   none;
+  --nav-bg:      transparent;
 
-  --room-home:    #000000;
-  --room-movies:  #000000;
-  --room-books:   #000000;
-  --room-records: #000000;
-  --room-stats:   #000000;
+  --room-home:    #111213;
+  --room-movies:  #111213;
+  --room-books:   #111213;
+  --room-records: #111213;
+  --room-stats:   #111213;
   color-scheme: dark;
 }
 
 /* ── Starfield ── */
 html[data-theme="dark"] body {
-  background-color: #000000;
-  background-image:
-    /* Bright stars */
-    radial-gradient(3px 3px at 20px 30px, #fff 0%, transparent 50%),
-    radial-gradient(2.5px 2.5px at 85px 110px, #fff 0%, transparent 50%),
-    radial-gradient(3px 3px at 150px 45px, rgba(255,255,255,0.95) 0%, transparent 50%),
-    radial-gradient(2.5px 2.5px at 40px 180px, #fff 0%, transparent 50%),
-    radial-gradient(3.5px 3.5px at 200px 140px, rgba(255,255,255,0.9) 0%, transparent 50%),
-    radial-gradient(2.5px 2.5px at 110px 60px, #fff 0%, transparent 50%),
-    /* Medium stars */
-    radial-gradient(2px 2px at 30px 80px, rgba(255,255,255,0.8) 0%, transparent 50%),
-    radial-gradient(2px 2px at 170px 25px, rgba(255,255,255,0.75) 0%, transparent 50%),
-    radial-gradient(2px 2px at 65px 145px, rgba(255,255,255,0.7) 0%, transparent 50%),
-    radial-gradient(2px 2px at 130px 95px, rgba(255,255,255,0.8) 0%, transparent 50%),
-    radial-gradient(2px 2px at 15px 130px, rgba(255,255,255,0.7) 0%, transparent 50%),
-    radial-gradient(2px 2px at 190px 175px, rgba(255,255,255,0.75) 0%, transparent 50%),
-    radial-gradient(2px 2px at 95px 15px, rgba(255,255,255,0.65) 0%, transparent 50%),
-    radial-gradient(2px 2px at 55px 50px, rgba(255,255,255,0.7) 0%, transparent 50%),
-    /* Dim stars */
-    radial-gradient(1.5px 1.5px at 45px 65px, rgba(255,255,255,0.45) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 120px 35px, rgba(255,255,255,0.4) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 75px 120px, rgba(255,255,255,0.35) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 160px 80px, rgba(255,255,255,0.45) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 25px 155px, rgba(255,255,255,0.4) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 140px 160px, rgba(255,255,255,0.35) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 100px 180px, rgba(255,255,255,0.4) 0%, transparent 50%),
-    radial-gradient(1.5px 1.5px at 180px 110px, rgba(255,255,255,0.3) 0%, transparent 50%);
-  background-size:
-    220px 210px,
-    250px 230px,
-    190px 260px,
-    270px 200px,
-    230px 240px,
-    210px 270px,
-    180px 190px,
-    200px 220px,
-    240px 180px,
-    170px 250px,
-    260px 210px,
-    190px 240px,
-    220px 260px,
-    250px 190px,
-    160px 170px,
-    200px 200px,
-    230px 160px,
-    180px 230px,
-    210px 180px,
-    240px 220px,
-    170px 210px,
-    200px 240px;
+  background-color: #111213;
+  background-image: none;
 }
 
 /* ── Reset ── */
@@ -920,4 +871,333 @@ rect.ch-subdomain-bg {
 @keyframes c-rise-in {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════
+   Declaration Mode Final Pass
+   ══════════════════════════════════════════════ */
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 50px 10px 0;
+  max-width: none;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.42;
+  letter-spacing: 0;
+  word-break: normal;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+img {
+  border-radius: 0;
+}
+
+.site-nav {
+  position: static;
+  display: block;
+  width: min(650px, 100%);
+  max-width: 650px;
+  margin: 0 auto 38px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.site-nav__brand {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--text);
+  font-size: 1.04rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.site-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  overflow: visible;
+}
+
+.site-nav__links a {
+  padding: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.site-nav__links a.is-active {
+  border-bottom: 0;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.c-shell {
+  width: min(650px, 100%);
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 0 0 4rem;
+}
+
+.c-home-intro,
+.c-hero {
+  margin: 0 0 2.4rem;
+  padding: 0;
+  border: 0;
+}
+
+.c-home-intro__badge,
+.c-hero__eyebrow,
+.label {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--text-2);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  padding: 0;
+  text-transform: none;
+}
+
+.c-home-intro h1,
+.c-hero h1 {
+  margin: 0.15rem 0 1rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+
+.c-home-intro__lede,
+.c-hero__meta,
+.c-stat-detail,
+.culture-footer {
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.42;
+}
+
+.c-movie-card__review,
+.c-book-card__review {
+  color: var(--text-2);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  margin-top: 0.12rem;
+}
+
+.c-home-intro__meta,
+.c-movie-card__date,
+.c-book-card__date,
+.c-book-card__author,
+.c-record-meta,
+.c-stat-label {
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.c-home-nav,
+.c-filter,
+.c-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  margin-top: 1rem;
+}
+
+.c-home-nav a,
+.c-filter-btn,
+.c-see-all {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.c-filter-btn.is-active,
+.c-filter-btn:hover {
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.c-section {
+  margin-top: 3rem;
+}
+
+.c-section-header {
+  display: block;
+  margin-bottom: 0.75rem;
+  padding: 0;
+  border: 0;
+}
+
+.c-section-title {
+  margin: 0 0 0.75rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.c-stat-grid {
+  display: block;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.c-stat-cell {
+  padding: 0.95rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.display-num,
+.c-stat-number {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.c-stat-number--accent,
+.c-hero__meta strong,
+.c-movie-card__rating,
+.c-book-card__rating {
+  color: var(--accent);
+}
+
+.c-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 1.4rem 1rem;
+}
+
+.c-movie-card,
+.c-book-card {
+  cursor: default;
+}
+
+.c-movie-card__poster,
+.c-book-card__cover {
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--bg-sunken);
+}
+
+.c-movie-card__poster img,
+.c-book-card__cover img {
+  filter: none;
+  transition: none;
+}
+
+.c-movie-card:hover .c-movie-card__poster img,
+.c-book-card:hover .c-book-card__cover img {
+  transform: none;
+  filter: none;
+}
+
+.c-movie-card__overlay,
+.c-movie-card__runtime,
+.c-movie-card__genres {
+  display: none;
+}
+
+.c-movie-card__title,
+.c-book-card__title {
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.c-record-row,
+.c-highlight-card,
+.chart-card,
+.heatmap-shell {
+  padding: 0.95rem 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.culture-footer {
+  width: auto;
+  max-width: none;
+  margin: 3rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+@media (max-width: 480px) {
+  body {
+    margin: 0;
+    padding-top: 34px;
+  }
+
+  .site-nav {
+    padding: 0;
+  }
+
+  .site-nav__links {
+    flex-wrap: wrap;
+    gap: 0.55rem 0.8rem;
+    overflow: visible;
+  }
+
+  .site-nav__links a,
+  .c-home-nav a,
+  .c-filter-btn {
+    font-size: 0.82rem;
+  }
+
+  .c-shell {
+    width: min(650px, 100%);
+    max-width: 650px;
+    padding: 0 0 3rem;
+  }
+
+  .c-cards {
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 1.1rem 0.75rem;
+  }
 }
