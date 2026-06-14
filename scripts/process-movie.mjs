@@ -169,9 +169,12 @@ async function main() {
     movies[existingIndex] = {
       ...existing,
       ...record,
+      added_at: existing.added_at ?? record.added_at,
       watched_date: record.watched_date ?? existing.watched_date ?? null,
       tmdb_id: record.tmdb_id ?? existing.tmdb_id ?? null,
-      title_ko: record.title_ko ?? existing.title_ko ?? userTitle,
+      title_ko: tmdb
+        ? (record.title_ko ?? existing.title_ko ?? userTitle)
+        : (existing.title_ko ?? record.title_ko ?? userTitle),
       title_original: record.title_original ?? existing.title_original ?? null,
       poster_path: record.poster_path ?? existing.poster_path ?? null,
       backdrop_path: record.backdrop_path ?? existing.backdrop_path ?? null,

@@ -7,7 +7,6 @@ on:
 permissions:
   contents: write
   issues: read
-  actions: write
 
 concurrency:
   group: process-issue-main
@@ -22,13 +21,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: Sync latest main
+        run: git pull --ff-only origin main
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
 
@@ -67,15 +68,3 @@ jobs:
           git pull --rebase origin main
           git push origin HEAD:main
           echo "data_changed=true" >> $GITHUB_OUTPUT
-
-      - name: Trigger deploy
-        if: steps.commit.outputs.data_changed == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy.yml',
-              ref: 'main',
-            });

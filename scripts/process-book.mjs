@@ -305,9 +305,9 @@ async function main() {
     books[existingIndex] = {
       ...existing,
       ...record,
-      // Preserve legacy OpenLibrary keys if they exist in old records.
-      ol_key: existing.ol_key ?? null,
-      // Keep existing cover if current lookup fails.
+      added_at: existing.added_at ?? record.added_at,
+      // Keep existing metadata if current lookup fails.
+      title_normalized: aladin?.title ?? google?.title ?? existing.title_normalized ?? userTitle,
       cover_url: record.cover_url ?? existing.cover_url ?? null,
       cover_id: record.cover_id ?? existing.cover_id ?? null,
       authors: (record.authors && record.authors.length > 0) ? record.authors : (existing.authors ?? []),
