@@ -1,5 +1,37 @@
 [
   {
+    "id": 87,
+    "user_title": "승자의 저주",
+    "rating": 5,
+    "review": "일이 좀 있어서 좀 오랫동안 책을 봄.\n책이 계속 생각해야 해서 조금 피곤함.",
+    "start_date": "2026-03-27",
+    "finish_date": "2026-06-23",
+    "reading_days": 88,
+    "added_at": "2026-06-23T15:26:31.603Z",
+    "aladin_item_id": 387140168,
+    "google_volume_id": null,
+    "title_normalized": "승자의 저주 - 인간의 비합리성을 밝혀낸 행동경제학, 그 시작과 완성",
+    "authors": [
+      "리처드 탈러",
+      "알렉스 이마스",
+      "임경은",
+      "최정규"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/38714/1/cover200/8901299445_1.jpg",
+    "cover_id": null,
+    "publisher": "리더스북",
+    "first_publish_year": 2026,
+    "subjects": [
+      "국내도서",
+      "경제경영",
+      "경제학/경제일반",
+      "경제사/경제전망",
+      "세계 경제사/경제전망"
+    ],
+    "pages": 396,
+    "isbn": "9788901299440"
+  },
+  {
     "id": 83,
     "user_title": "군주론",
     "rating": 5,
