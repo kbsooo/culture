@@ -1,5 +1,26 @@
 [
   {
+    "id": 86,
+    "user_title": "디스클로저 데이",
+    "rating": 4,
+    "review": "쉽지않음...\n내가 도대체 뭘 본거지?",
+    "watched_date": "2026-06-10",
+    "added_at": "2026-06-23T15:21:21.959Z",
+    "tmdb_id": 1275779,
+    "title_ko": "디스클로저 데이",
+    "title_original": "Disclosure Day",
+    "poster_path": "/86EdVHOEFjFNPeE0sWjpCqcUORj.jpg",
+    "backdrop_path": "/s6ly8laenkHWlIBRkLSfIuEMLC6.jpg",
+    "release_date": "2026-06-10",
+    "genres": [
+      "SF",
+      "스릴러"
+    ],
+    "runtime": 146,
+    "overview": "우리가 혼자가 아니라는 사실을 알게 된다면, 누군가가 그것을 증명한다면, 그게 당신을 두렵게 하나요? 진실은 70억 인류 모두의 것입니다.",
+    "tmdb_rating": 6.716
+  },
+  {
     "id": 85,
     "user_title": "군체",
     "rating": 2,
