@@ -294,10 +294,10 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
   )}
 
   {(movieRatingDist.length > 0 || bookRatingDist.length > 0) && (
-    <section class="c-section" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem;">
+    <section class="c-section" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem;">
       {movieRatingDist.length > 0 && (
         <div class="c-stat-box">
-          <div class="c-section-header" style="margin-bottom:1.5rem; padding-bottom:0.5rem;">
+          <div class="c-section-header" style="margin-bottom:1rem; padding-bottom:0.5rem;">
             <p class="c-hero__eyebrow" style="margin:0">Film Rating Dist.</p>
             <a href={`${base}/movies/`} class="c-see-all">All films →</a>
           </div>
@@ -311,7 +311,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       )}
       {bookRatingDist.length > 0 && (
         <div class="c-stat-box">
-          <div class="c-section-header" style="margin-bottom:1.5rem; padding-bottom:0.5rem;">
+          <div class="c-section-header" style="margin-bottom:1rem; padding-bottom:0.5rem;">
             <p class="c-hero__eyebrow" style="margin:0">Book Rating Dist.</p>
             <a href={`${base}/books/`} class="c-see-all">All books →</a>
           </div>
@@ -322,25 +322,25 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
   )}
 
   {(hasMovieYearData || hasBookYearData) && (
-    <section class="c-section" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem;">
+    <section class="c-section" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem;">
       {hasMovieYearData && (
         <div class="c-stat-box">
-          <p class="c-hero__eyebrow" style="margin-bottom:1.5rem">Films by Release Year</p>
+          <p class="c-hero__eyebrow" style="margin-bottom:1rem">Films by Release Year</p>
           <GenreChart data={movieYearDist} />
         </div>
       )}
       {hasBookYearData && (
         <div class="c-stat-box">
-          <p class="c-hero__eyebrow" style="margin-bottom:1.5rem">Books by Publish Year</p>
+          <p class="c-hero__eyebrow" style="margin-bottom:1rem">Books by Publish Year</p>
           <GenreChart data={bookYearDist} />
         </div>
       )}
     </section>
   )}
 
-  <section class="c-section" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem;">
+  <section class="c-section" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem;">
     <div class="c-stat-box">
-      <div class="c-section-header" style="margin-bottom:1.5rem; padding-bottom:0.5rem;">
+      <div class="c-section-header" style="margin-bottom:1rem; padding-bottom:0.5rem;">
         <p class="c-hero__eyebrow" style="margin:0">Top Film Genres</p>
         {totalMovies > 0 && <a href={`${base}/movies/`} class="c-see-all">All films →</a>}
       </div>
@@ -350,7 +350,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
       }
     </div>
     <div class="c-stat-box">
-      <div class="c-section-header" style="margin-bottom:1.5rem; padding-bottom:0.5rem;">
+      <div class="c-section-header" style="margin-bottom:1rem; padding-bottom:0.5rem;">
         <p class="c-hero__eyebrow" style="margin:0">Top Book Subjects</p>
         {totalBooks > 0 && <a href={`${base}/books/`} class="c-see-all">All books →</a>}
       </div>
@@ -364,7 +364,7 @@ const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
   {hasWeekdayData && (
     <section class="c-section">
       <div class="c-stat-box">
-        <p class="c-hero__eyebrow" style="margin-bottom:1.5rem">Films by Weekday</p>
+        <p class="c-hero__eyebrow" style="margin-bottom:1rem">Films by Weekday</p>
         <GenreChart data={weekdayData} />
         <p style="margin:1rem 0 0; font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--text-3)">By watch date (undated excluded)</p>
       </div>

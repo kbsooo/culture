@@ -9,24 +9,68 @@ if (!data.length) return;
 const max = Math.max(...data.map(d => d[1]));
 ---
 
-<!-- Clean horizontal bars — no background card wrapper, no rounded pill bars -->
-<div class="space-y-2.5">
-  {data.map(([genre, count]) => (
-    <div class="flex items-center gap-4">
-      <span class="text-xs w-16 text-right shrink-0 font-mono"
-            style="color: var(--text-2)">{genre}</span>
-      <div class="flex-1 relative h-px" style="background: var(--border)">
-        <div
-          class="absolute inset-y-0 left-0 h-px transition-all duration-700"
-          style={`width: ${(count / max * 100).toFixed(1)}%; background: var(--accent);`}
-        />
-        <!-- Thicker visual track: bar is 2px tall, centered on the line -->
-        <div
-          class="absolute -top-[1px] left-0 h-[2px] transition-all duration-700"
-          style={`width: ${(count / max * 100).toFixed(1)}%; background: var(--accent); opacity: 0.85;`}
-        />
+<!-- Compact horizontal bar chart. Scoped styles replace the old Tailwind
+     utilities (Tailwind was removed, so the class-based layout collapsed
+     into stacked block elements and the chart looked broken/tall). -->
+<div class="gc">
+  {data.map(([genre, count]) => {
+    const pct = max > 0 ? (count / max * 100).toFixed(1) : '0';
+    return (
+      <div class="gc-row">
+        <span class="gc-label" title={genre}>{genre}</span>
+        <div class="gc-track">
+          <div class="gc-bar" style={`width:${pct}%`} />
+        </div>
+        <span class="gc-count">{count}</span>
       </div>
-      <span class="text-xs font-mono w-4 shrink-0" style="color: var(--text-3)">{count}</span>
-    </div>
-  ))}
+    );
+  })}
 </div>
+
+<style>
+  .gc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .gc-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .gc-label {
+    width: 5rem;
+    flex-shrink: 0;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .gc-track {
+    flex: 1;
+    position: relative;
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .gc-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .gc-count {
+    width: 1.75rem;
+    flex-shrink: 0;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-3);
+  }
+</style>
