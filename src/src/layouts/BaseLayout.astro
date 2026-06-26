@@ -42,5 +42,98 @@ const isStats = currentPath.includes('/stats');
   <footer class="culture-footer">
     <p>Culture Log · {new Date().getFullYear()}</p>
   </footer>
+
+  <!-- Shared review modal. Cards with data-card open this; the payload is
+       rendered into the dialog by the script below. -->
+  <div class="c-modal" id="review-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="review-modal__title">
+    <div class="c-modal__backdrop" data-modal-close></div>
+    <div class="c-modal__panel">
+      <button class="c-modal__close" type="button" aria-label="닫기" data-modal-close>×</button>
+      <p class="c-modal__kind" id="review-modal__kind"></p>
+      <h2 class="c-modal__title" id="review-modal__title"></h2>
+      <p class="c-modal__sub" id="review-modal__sub"></p>
+      <ul class="c-modal__meta" id="review-modal__meta"></ul>
+      <div class="c-modal__review" id="review-modal__review"></div>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var modal = document.getElementById('review-modal');
+      if (!modal) return;
+      var titleEl = document.getElementById('review-modal__title');
+      var kindEl = document.getElementById('review-modal__kind');
+      var subEl = document.getElementById('review-modal__sub');
+      var metaEl = document.getElementById('review-modal__meta');
+      var reviewEl = document.getElementById('review-modal__review');
+      var lastFocused = null;
+
+      function esc(s) { return (s == null ? '' : String(s)); }
+
+      function openModal(payload) {
+        var p = typeof payload === 'string' ? JSON.parse(payload) : payload;
+        kindEl.textContent = p.kind === 'book' ? 'Book' : 'Film';
+        titleEl.textContent = esc(p.title) || '';
+        subEl.textContent = esc(p.original || p.author) || '';
+        subEl.style.display = subEl.textContent ? '' : 'none';
+
+        var meta = [];
+        if (p.date) meta.push(p.date);
+        if (p.rating != null) meta.push('★ ' + p.rating);
+        if (p.runtime) meta.push(p.runtime);
+        if (p.pages) meta.push(p.pages);
+        if (p.readingDays) meta.push(p.readingDays);
+        if (p.publisher) meta.push(p.publisher);
+        if (Array.isArray(p.genres) && p.genres.length) meta.push(p.genres.join(' · '));
+        metaEl.innerHTML = '';
+        meta.forEach(function (m) {
+          var li = document.createElement('li');
+          li.textContent = m;
+          metaEl.appendChild(li);
+        });
+        metaEl.style.display = meta.length ? '' : 'none';
+
+        reviewEl.textContent = esc(p.review) || '';
+        reviewEl.style.display = p.review ? '' : 'none';
+
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        var closeBtn = modal.querySelector('.c-modal__close');
+        if (closeBtn) closeBtn.focus();
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      }
+
+      document.addEventListener('click', function (e) {
+        var card = e.target.closest('[data-card]');
+        if (card && modal.contains(card) === false) {
+          var raw = card.getAttribute('data-card');
+          if (!raw) return;
+          lastFocused = card;
+          e.preventDefault();
+          openModal(raw);
+          return;
+        }
+        if (e.target.closest('[data-modal-close]')) {
+          e.preventDefault();
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+        if ((e.key === 'Enter' || e.key === ' ') && !modal.hidden) {
+          var t = e.target;
+          if (t && t.closest && t.closest('[data-modal-close]')) { e.preventDefault(); closeModal(); }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -43,9 +43,30 @@ function fmtRuntime(min: number) {
 
 const runtimeStr = movie.runtime && movie.runtime > 0 ? fmtRuntime(movie.runtime) : null;
 const topGenres = (movie.genres ?? []).slice(0, 2);
+
+// Payload for the review modal. Rendered as JSON in a data attribute so the
+// shared modal script can populate a popup without per-card DOM bloat.
+const hasDetail = Boolean(movie.review || showOriginal || runtimeStr || topGenres.length);
+const modalPayload = hasDetail ? JSON.stringify({
+  kind: 'movie',
+  title: displayTitle,
+  original: showOriginal ? movie.title_original : null,
+  date: dateStr,
+  rating: movie.rating,
+  runtime: runtimeStr,
+  genres: topGenres,
+  review: movie.review || null,
+}) : null;
 ---
 
-<article class="c-movie-card">
+<article
+  class="c-movie-card"
+  class:list={{ 'is-clickable': hasDetail }}
+  data-card={modalPayload}
+  role={hasDetail ? 'button' : undefined}
+  tabindex={hasDetail ? 0 : undefined}
+  aria-label={hasDetail ? `${displayTitle} 후기 보기` : undefined}
+>
   <div class="c-movie-card__poster">
     <img
       src={posterUrl}
@@ -79,8 +100,5 @@ const topGenres = (movie.genres ?? []).slice(0, 2);
       <span class="c-movie-card__date">{dateStr ?? '날짜 미상'}</span>
       <span class="c-movie-card__rating">★ {movie.rating}</span>
     </div>
-    {movie.review && (
-      <p class="c-movie-card__review">{movie.review}</p>
-    )}
   </div>
 </article>

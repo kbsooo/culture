@@ -14,6 +14,7 @@ interface Props {
     reading_days?: number | null;
     pages?: number | null;
     first_publish_year?: number | null;
+    publisher?: string | null;
   };
 }
 
@@ -46,9 +47,31 @@ const authorDisplay = (() => {
 })();
 
 const pagesStr = book.pages ? `${book.pages.toLocaleString('ko-KR')}p` : null;
+const readingDaysStr = book.reading_days ? `${book.reading_days}일` : null;
+
+// Payload for the review modal.
+const hasDetail = Boolean(book.review || pagesStr || readingDaysStr || book.publisher);
+const modalPayload = hasDetail ? JSON.stringify({
+  kind: 'book',
+  title: displayTitle,
+  author: authorDisplay,
+  date: finishStr,
+  rating: book.rating,
+  pages: pagesStr,
+  readingDays: readingDaysStr,
+  publisher: book.publisher || null,
+  review: book.review || null,
+}) : null;
 ---
 
-<article class="c-book-card">
+<article
+  class="c-book-card"
+  class:list={{ 'is-clickable': hasDetail }}
+  data-card={modalPayload}
+  role={hasDetail ? 'button' : undefined}
+  tabindex={hasDetail ? 0 : undefined}
+  aria-label={hasDetail ? `${displayTitle} 후기 보기` : undefined}
+>
   <div class="c-book-card__cover">
     <img
       src={coverUrl}
@@ -68,11 +91,5 @@ const pagesStr = book.pages ? `${book.pages.toLocaleString('ko-KR')}p` : null;
       <span class="c-book-card__date">{finishStr ?? '날짜 미상'}</span>
       <span class="c-book-card__rating">★ {book.rating}</span>
     </div>
-    {pagesStr && (
-      <p class="c-book-card__pages">{pagesStr}</p>
-    )}
-    {book.review && (
-      <p class="c-book-card__review">{book.review}</p>
-    )}
   </div>
 </article>
