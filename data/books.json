@@ -1,5 +1,33 @@
 [
   {
+    "id": 88,
+    "user_title": "지리로 보는 세상의 비밀",
+    "rating": 10,
+    "review": "11",
+    "start_date": "2026-06-24",
+    "finish_date": "2026-07-19",
+    "reading_days": 25,
+    "added_at": "2026-07-19T14:00:21.907Z",
+    "aladin_item_id": 391494781,
+    "google_volume_id": null,
+    "title_normalized": "지리로 보는 세상의 비밀 - 자연과 인간을 이해하는 가장 직관적인 관점",
+    "authors": [
+      "녠웨",
+      "하은지"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/39149/47/cover200/k442138860_2.jpg",
+    "cover_id": null,
+    "publisher": "이든서재",
+    "first_publish_year": 2026,
+    "subjects": [
+      "국내도서",
+      "인문학",
+      "교양 인문학"
+    ],
+    "pages": 304,
+    "isbn": "9791194812210"
+  },
+  {
     "id": 87,
     "user_title": "승자의 저주",
     "rating": 5,
