@@ -56,6 +56,34 @@
     "isbn": "9788937460449"
   },
   {
+    "id": 91,
+    "user_title": "모비 딕",
+    "rating": 9,
+    "review": "모비 딕 을 찾아 (억지로) 항해하는 에이해브 선장의 이야기.\n다양한 의미로 현대 사회에도 해석 가능할 듯",
+    "start_date": null,
+    "finish_date": "2026-07-19",
+    "reading_days": null,
+    "added_at": "2026-07-19T14:07:57.611Z",
+    "aladin_item_id": 336605811,
+    "google_volume_id": null,
+    "title_normalized": "모비 딕 - 전면 개역판",
+    "authors": [
+      "허먼 멜빌",
+      "김석희"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/33660/58/cover200/k832939622_1.jpg",
+    "cover_id": null,
+    "publisher": "작가정신",
+    "first_publish_year": 2024,
+    "subjects": [
+      "국내도서",
+      "소설/시/희곡",
+      "영미소설"
+    ],
+    "pages": 808,
+    "isbn": "9791160263404"
+  },
+  {
     "id": 87,
     "user_title": "승자의 저주",
     "rating": 5,
