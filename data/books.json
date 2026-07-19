@@ -28,6 +28,34 @@
     "isbn": "9791194812210"
   },
   {
+    "id": 90,
+    "user_title": "데미안",
+    "rating": 9,
+    "review": "싱클레어의 내적 성장 이야기",
+    "start_date": "2026-06-29",
+    "finish_date": "2026-07-19",
+    "reading_days": 20,
+    "added_at": "2026-07-19T14:02:19.954Z",
+    "aladin_item_id": 260084,
+    "google_volume_id": null,
+    "title_normalized": "데미안",
+    "authors": [
+      "헤르만 헤세",
+      "전영애"
+    ],
+    "cover_url": "https://image.aladin.co.kr/product/26/0/cover200/s452139198_1.jpg",
+    "cover_id": null,
+    "publisher": "민음사",
+    "first_publish_year": 2000,
+    "subjects": [
+      "국내도서",
+      "소설/시/희곡",
+      "독일소설"
+    ],
+    "pages": 248,
+    "isbn": "9788937460449"
+  },
+  {
     "id": 87,
     "user_title": "승자의 저주",
     "rating": 5,
