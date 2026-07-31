@@ -1,5 +1,27 @@
 [
   {
+    "id": 92,
+    "user_title": "스파이더맨: 브랜드 뉴 데이",
+    "rating": 8,
+    "review": "스파이더맨이 고생하고 각성하는 내용. 좋았음.\n세이디 싱크 이쁘다.\n근데 영화 전체가 얕은 스토리 여러개가 붙어있는 느낌.",
+    "watched_date": "2026-07-30",
+    "added_at": "2026-07-31T01:00:06.870Z",
+    "tmdb_id": 969681,
+    "title_ko": "스파이더맨: 브랜드 뉴 데이",
+    "title_original": "Spider-Man: Brand New Day",
+    "poster_path": "/8mLepBa5l591xFidRpn65xV7hb4.jpg",
+    "backdrop_path": "/vjMvFSmGUxEtqVdaZgvFee9XkZl.jpg",
+    "release_date": "2026-07-28",
+    "genres": [
+      "SF",
+      "액션",
+      "모험"
+    ],
+    "runtime": 145,
+    "overview": "모두에게 잊힌 ‘피터 파커’가 자신의 정체를 기억하는 의문의 적의 등장과 DNA 변이로 통제 불가능한 힘을 얻으며 더 깊은 혼란에 빠진 가운데, 소중한 이들을 지키기 위해 새로운 위협에 맞서는 액션 블록버스터",
+    "tmdb_rating": 7.99
+  },
+  {
     "id": 89,
     "user_title": "토이 스토리 5",
     "rating": 8,
