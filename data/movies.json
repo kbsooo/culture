@@ -1,5 +1,27 @@
 [
   {
+    "id": 94,
+    "user_title": "오디세이",
+    "rating": 10,
+    "review": "대대대명작\n원작과는 맞지 않는 부분이 좀 있지만 그거 그대로 할거면 감독이 왜있냐\n라고 생각하고 각색됐다 생각하고 보면 레전드",
+    "watched_date": "2026-08-05",
+    "added_at": "2026-08-07T01:02:37.474Z",
+    "tmdb_id": 1368337,
+    "title_ko": "오디세이",
+    "title_original": "The Odyssey",
+    "poster_path": "/8ze9OcVuFiy94s6FFPvsn4oC2e1.jpg",
+    "backdrop_path": "/RMXG8myu1aGlNUsRjtxzmpdMK0.jpg",
+    "release_date": "2026-07-15",
+    "genres": [
+      "모험",
+      "액션",
+      "판타지"
+    ],
+    "runtime": 173,
+    "overview": "10년간 이어진 트로이 전쟁을 승리로 이끈 영웅 '오디세우스'는 왕의 부재를 틈타 침탈과 권력 다툼이 벌어진 왕국에서 그를 기다리고 있는 아내 '페넬로페'와 아들 '텔레마코스'에게 돌아가기 위한 여정에 나선다. 그러나 신들의 분노를 산 그의 귀환 앞에는 거대한 폭풍과 괴물들, 그리고 거스를 수 없는 운명의 시련이 기다리고 있는데…",
+    "tmdb_rating": 7.96
+  },
+  {
     "id": 92,
     "user_title": "스파이더맨: 브랜드 뉴 데이",
     "rating": 8,
